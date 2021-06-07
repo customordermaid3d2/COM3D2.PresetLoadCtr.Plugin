@@ -79,7 +79,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         }
 
         private const float windowSpace = 40.0f;
-        private Rect windowRect = new Rect(windowSpace, windowSpace, 300f, 400f);
+        private Rect windowRect = new Rect(windowSpace, windowSpace, 300f, 600f);
         private int windowId = new System.Random().Next();
 
         public void OnGUI()

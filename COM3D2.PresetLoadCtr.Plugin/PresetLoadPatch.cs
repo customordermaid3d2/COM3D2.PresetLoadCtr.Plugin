@@ -73,7 +73,8 @@ namespace COM3D2.Lilly.Plugin
             //if (configEntryUtill["SetActive", false])
             //    MyLog.LogMessage("CharacterMgr.SetActive", f_nActiveSlotNo, MyUtill.GetMaidFullName(f_maid));
             if (!f_bMan)
-                namesMaid[f_nActiveSlotNo] = MyUtill.GetMaidFullName(f_maid);
+                namesMaid[f_nActiveSlotNo] = f_maid.status.fullNameEnStyle;
+                //namesMaid[f_nActiveSlotNo] = MyUtill.GetMaidFullName(f_maid);
         }
 
         // private void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)

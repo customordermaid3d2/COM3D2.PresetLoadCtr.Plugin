@@ -96,7 +96,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
             {
                 GUILayout.Label("Maid List " + selGridmaid);
                 //GUI.enabled = modType == ModType.OneMaid;
-                selGridmaid = GUILayout.SelectionGrid(selGridmaid, PresetLoadPatch.namesMaid, 1);
+                selGridmaid = GUILayout.SelectionGrid(selGridmaid, PresetLoadPatch.namesMaid, 1, GUILayout.Width(260));
             }
 
             GUILayout.EndScrollView();
