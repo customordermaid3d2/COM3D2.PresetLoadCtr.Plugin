@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COM3D2.PresetLoadCtr.Plugin", "COM3D2.PresetLoadCtr.Plugin\COM3D2.PresetLoadCtr.Plugin.csproj", "{4DA1E85A-25F8-45D5-B72F-553D3C973524}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DA1E85A-25F8-45D5-B72F-553D3C973524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DA1E85A-25F8-45D5-B72F-553D3C973524}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DA1E85A-25F8-45D5-B72F-553D3C973524}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DA1E85A-25F8-45D5-B72F-553D3C973524}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B472261-47AB-42F9-B85B-47E8BBBF95C4}
+	EndGlobalSection
+EndGlobal
