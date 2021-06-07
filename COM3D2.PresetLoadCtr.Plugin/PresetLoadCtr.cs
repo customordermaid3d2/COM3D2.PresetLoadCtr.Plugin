@@ -13,6 +13,8 @@ using UnityEngine.SceneManagement;
 
 namespace COM3D2.PresetLoadCtr.Plugin
 {
+    [BepInPlugin("COM3D2.PresetLoadCtr.Plugin", "COM3D2.PresetLoadCtr.Plugin", "21.6.8")]// 버전 규칙 잇음. 반드시 2~4개의 숫자구성으로 해야함. 미준수시 못읽어들임
+    [BepInProcess("COM3D2x64.exe")]
     public class PresetLoadCtr : BaseUnityPlugin
     {
         // 단축키 설정파일로 연동
@@ -30,6 +32,8 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         public void Awake()
         {
+            MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
+
             MyLog.LogMessage("Awake");
 
             // 단축키 기본값 설정
@@ -39,8 +43,8 @@ namespace COM3D2.PresetLoadCtr.Plugin
             IsGUIOn = Config.Bind("GUI", "isGUIOn", false);
 
             // 기어 메뉴 추가. 이 플러그인 기능 자체를 멈추려면 enabled 를 꺽어야함. 그러면 OnEnable(), OnDisable() 이 작동함
-            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { enabled = !enabled; }), "PresetLoadCtr", MyUtill.ExtractResource(Properties.Resources.icon));
-            //SystemShortcutAPI.AddButton("Sample", new Action(delegate () { isGUIOn = !isGUIOn; }), "Sample", MyUtill.ExtractResource(Properties.Resources.sample_png));
+            //SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { enabled = !enabled; }), "PresetLoadCtr", MyUtill.ExtractResource(Properties.Resources.icon));
+            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { isGUIOn = !isGUIOn; }), "PresetLoadCtr", MyUtill.ExtractResource(Properties.Resources.icon));
 
             PresetLoadUtill.init(Config);
             PresetLoadUtill.LoadList();
@@ -75,7 +79,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         }
 
         private const float windowSpace = 40.0f;
-        private Rect windowRect = new Rect(windowSpace, windowSpace, 400f, 400f);
+        private Rect windowRect = new Rect(windowSpace, windowSpace, 300f, 400f);
         private int windowId = new System.Random().Next();
 
         public void OnGUI()

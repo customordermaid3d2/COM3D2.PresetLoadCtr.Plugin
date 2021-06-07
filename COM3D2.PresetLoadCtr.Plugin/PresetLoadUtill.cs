@@ -70,8 +70,12 @@ namespace COM3D2.PresetLoadCtr.Plugin
             namesList = Enum.GetNames(typeof(ListType));
         }
 
+        private static Vector2 scrollPosition;
+
         public static void WindowFunction(int id)
         {
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition,false, true);
+
             GUILayout.Label("now scene.name : " + PresetLoadCtr.scene_name);
             GUILayout.Label("Wear Preset file : " + listWear.Count);
             GUILayout.Label("Body Preset file : " + listBody.Count);
@@ -94,6 +98,8 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 //GUI.enabled = modType == ModType.OneMaid;
                 selGridmaid = GUILayout.SelectionGrid(selGridmaid, PresetLoadPatch.namesMaid, 1);
             }
+
+            GUILayout.EndScrollView();
 
             if (GUI.changed)
             {
