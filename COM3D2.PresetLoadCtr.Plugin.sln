@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COM3D2.PresetLoadCtr.Plugin
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{16DD331E-AF99-4FC4-8387-79742463640D}"
 	ProjectSection(SolutionItems) = preProject
-		READ.MD = READ.MD
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global

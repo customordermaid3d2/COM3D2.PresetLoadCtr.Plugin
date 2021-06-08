@@ -33,8 +33,23 @@ namespace COM3D2.PresetLoadCtr.Plugin
         public void Awake()
         {
             MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
-
             MyLog.LogMessage("Awake");
+
+            var overversion = new Version(1,56);
+            var gameversion = new Version(GameUty.GetBuildVersionText());
+
+            //if (!Misc.GAME_VERSION.ToString().StartsWith("155"))
+            if(gameversion > overversion)
+            {
+                MyLog.LogWarning("GAME_VERSION not support");
+                MyLog.LogError("Misc.GAME_VERSION : "+ Misc.GAME_VERSION);
+                MyLog.LogWarning("GAME_VERSION not support");
+
+                enabled = false;
+                return;
+            }
+
+
 
             // 단축키 기본값 설정
             ShowCounter = Config.Bind("KeyboardShortcut", "OnOff", new BepInEx.Configuration.KeyboardShortcut(KeyCode.Alpha8, KeyCode.LeftControl));
