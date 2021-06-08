@@ -15,9 +15,7 @@ namespace COM3D2.Lilly.Plugin
 
         public static PresetType presetType = PresetType.none;
 
-        public static bool isNewMaid = false;
-        public static bool isAuto = false;
-
+        private static bool isNewMaid = false;
 
         public enum PresetType
         {
@@ -109,7 +107,7 @@ namespace COM3D2.Lilly.Plugin
         [HarmonyPostfix]
         public static void OnCompleteFadeIn() // Maid ___m_maid,SceneEdit __instance
         {
-            if (isAuto)
+            if (PresetLoadUtill.IsAuto)
             {
                 newMaidSetting();
             }

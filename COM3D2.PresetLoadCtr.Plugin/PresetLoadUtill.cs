@@ -14,29 +14,32 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
     class PresetLoadUtill
     {
-        public static ConfigFile Config;
+        internal static ConfigFile Config;
 
-        public static System.Random rand = new System.Random();
+        internal static System.Random rand = new System.Random();
 
-        public static List<string> listWear = new List<string>();
-        public static List<string> listBody = new List<string>();
-        public static List<string> listAll = new List<string>();
-        public static List<string> lists = new List<string>();
+        internal static List<string> listWear = new List<string>();
+        internal static List<string> listBody = new List<string>();
+        internal static List<string> listAll = new List<string>();
+        internal static List<string> lists = new List<string>();
 
         private static ConfigEntry<int> selGridMod;//= (int)ModType.AllMaid_RandomPreset;
         private static ConfigEntry<int> selGridList;//= (int)ListType.All;
         private static ConfigEntry<int> selGridPreset;// = (int)CharacterMgrPatch.PresetType.none;
         private static int selGridmaid = 0;
 
-        public static string[] namesMod;
-        public static string[] namesList;
-        public static string[] namesPreset;
+        internal static string[] namesMod;
+        internal static string[] namesList;
+        internal static string[] namesPreset;
 
-        static bool isLoadList;
+        internal static  ConfigEntry<bool> isAuto ;
+        internal static bool isLoadList;
+
 
         public static int SelGridPreset { get => selGridPreset.Value; set => selGridPreset.Value = value; }
         public static int SelGridList { get => selGridList.Value; set => selGridList.Value = value; }
         public static int SelGridMod { get => selGridMod.Value; set => selGridMod.Value = value; }
+        public static bool IsAuto { get => isAuto.Value; set => isAuto.Value = value; }
 
         //public static PresetType presetType = PresetType.none;
 
@@ -65,6 +68,8 @@ namespace COM3D2.PresetLoadCtr.Plugin
             selGridList = Config.Bind("ConfigFile", "selGridList", (int)ListType.All);
             selGridMod = Config.Bind("ConfigFile", "selGridMod", (int)ModType.AllMaid_RandomPreset);
 
+            isAuto = Config.Bind("ConfigFile", "isAuto", false);
+
             namesMod = Enum.GetNames(typeof(ModType));
             namesPreset = Enum.GetNames(typeof(PresetLoadPatch.PresetType));
             namesList = Enum.GetNames(typeof(ListType));
@@ -82,7 +87,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
             GUILayout.Label("Wear/Body Preset file : " + listAll.Count);
             GUILayout.Label("All  Preset file : " + lists.Count);
 
-            if (GUILayout.Button("Random Preset Run Auto "+ PresetLoadPatch.isAuto)) { PresetLoadPatch.isAuto = !PresetLoadPatch.isAuto; }
+            if (GUILayout.Button("Random Preset Run Auto "+ IsAuto)) { IsAuto = !IsAuto; }
             if (GUILayout.Button("Random Preset Run")) { RandPresetRun(); }
             if (GUILayout.Button("List load")) { LoadList(); }
 
