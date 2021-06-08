@@ -1,5 +1,9 @@
 # COM3D2.PresetLoadCtr.Plugin
 
+BepInEx plugin
+
+
+
 
 원래 프리셋 저장시 옷만,몸만 둘다 세종류만 저장 가능  
 
