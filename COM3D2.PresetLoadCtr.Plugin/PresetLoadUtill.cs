@@ -1,5 +1,7 @@
 ﻿using BepInEx.Configuration;
+using BepInPluginSample;
 using COM3D2.Lilly.Plugin;
+using COM3D2API;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,7 +45,23 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         //public static PresetType presetType = PresetType.none;
 
+        // private Rect windowRect = new Rect(windowSpace, windowSpace, 300f, 600f);
+        public static MyWindowRect myWindowRect;
+        private static int windowId = new System.Random().Next();
 
+        public static bool IsOpen
+        {
+            get => myWindowRect.IsOpen;
+            set => myWindowRect.IsOpen = value;
+        }
+
+        // GUI ON OFF 설정파일로 저장
+        private static ConfigEntry<bool> IsGUIOn;
+        public static bool isGUIOn
+        {
+            get => IsGUIOn.Value;
+            set => IsGUIOn.Value = value;
+        }
 
         public enum ListType
         {
@@ -63,12 +81,17 @@ namespace COM3D2.PresetLoadCtr.Plugin
         public static void init(ConfigFile Config)
         {
             PresetLoadUtill.Config = Config;
+            myWindowRect = new MyWindowRect(Config, "PresetLoadCtr", 300f);
 
             selGridPreset = Config.Bind("ConfigFile", "selGridPreset", (int)PresetLoadPatch.PresetType.none);
             selGridList = Config.Bind("ConfigFile", "selGridList", (int)ListType.All);
             selGridMod = Config.Bind("ConfigFile", "selGridMod", (int)ModType.AllMaid_RandomPreset);
-
+            // 일반 설정값
+            IsGUIOn = Config.Bind("GUI", "isGUIOn", false);
             isAuto = Config.Bind("ConfigFile", "isAuto", false);
+
+            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { isGUIOn = !isGUIOn; }), "PresetLoadCtr", MyUtill.ExtractResource(Properties.Resources.icon));
+
 
             namesMod = Enum.GetNames(typeof(ModType));
             namesPreset = Enum.GetNames(typeof(PresetLoadPatch.PresetType));
@@ -77,38 +100,62 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         private static Vector2 scrollPosition;
 
+        public static void OnGUI()
+        {
+            if (!isGUIOn)
+            {
+                return;
+            }
+            // 윈도우 리사이즈시 밖으로 나가버리는거 방지
+            myWindowRect.WindowRect = GUILayout.Window(windowId, myWindowRect.WindowRect, PresetLoadUtill.WindowFunction, "PresetLoadCtr",GUI.skin.box);
+        }
+
         public static void WindowFunction(int id)
         {
-            scrollPosition = GUILayout.BeginScrollView(scrollPosition,false, true);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("PresetLoadCtr " , GUILayout.Height(20));
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20))) { IsOpen = !IsOpen; }
+            if (GUILayout.Button("x", GUILayout.Width(20), GUILayout.Height(20))) { isGUIOn = false; }
+            GUILayout.EndHorizontal();
 
-            GUILayout.Label("now scene.name : " + PresetLoadCtr.scene_name);
-            GUILayout.Label("Wear Preset file : " + listWear.Count);
-            GUILayout.Label("Body Preset file : " + listBody.Count);
-            GUILayout.Label("Wear/Body Preset file : " + listAll.Count);
-            GUILayout.Label("All  Preset file : " + lists.Count);
-
-            if (GUILayout.Button("Random Preset Run Auto "+ IsAuto)) { IsAuto = !IsAuto; }
-            if (GUILayout.Button("Random Preset Run")) { RandPresetRun(); }
-            if (GUILayout.Button("List load")) { LoadList(); }
-
-            GUILayout.Label("PresetType " + SelGridPreset);
-            SelGridPreset = GUILayout.Toolbar(SelGridPreset, namesPreset);
-            GUILayout.Label("ListType " + SelGridList);
-            SelGridList = GUILayout.SelectionGrid(SelGridList, namesList, 2);
-            GUILayout.Label("ModType " + SelGridMod);
-            SelGridMod = GUILayout.SelectionGrid(SelGridMod, namesMod, 1);
-            if ((ModType)SelGridMod == ModType.OneMaid)
+            if (!IsOpen)
             {
-                GUILayout.Label("Maid List " + selGridmaid);
-                //GUI.enabled = modType == ModType.OneMaid;
-                selGridmaid = GUILayout.SelectionGrid(selGridmaid, PresetLoadPatch.namesMaid, 1, GUILayout.Width(260));
+
             }
-
-            GUILayout.EndScrollView();
-
-            if (GUI.changed)
+            else
             {
-                PresetLoadPatch.presetType = (PresetLoadPatch.PresetType)SelGridPreset;
+                scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true);
+
+                GUILayout.Label("now scene.name : " + PresetLoadCtr.scene_name);
+                GUILayout.Label("Wear Preset file : " + listWear.Count);
+                GUILayout.Label("Body Preset file : " + listBody.Count);
+                GUILayout.Label("Wear/Body Preset file : " + listAll.Count);
+                GUILayout.Label("All  Preset file : " + lists.Count);
+
+                if (GUILayout.Button("Random Preset Run Auto " + IsAuto)) { IsAuto = !IsAuto; }
+                if (GUILayout.Button("Random Preset Run")) { RandPresetRun(); }
+                if (GUILayout.Button("List load")) { LoadList(); }
+
+                GUILayout.Label("PresetType " + SelGridPreset);
+                SelGridPreset = GUILayout.Toolbar(SelGridPreset, namesPreset);
+                GUILayout.Label("ListType " + SelGridList);
+                SelGridList = GUILayout.SelectionGrid(SelGridList, namesList, 2);
+                GUILayout.Label("ModType " + SelGridMod);
+                SelGridMod = GUILayout.SelectionGrid(SelGridMod, namesMod, 1);
+                if ((ModType)SelGridMod == ModType.OneMaid)
+                {
+                    GUILayout.Label("Maid List " + selGridmaid);
+                    //GUI.enabled = modType == ModType.OneMaid;
+                    selGridmaid = GUILayout.SelectionGrid(selGridmaid, PresetLoadPatch.namesMaid, 1, GUILayout.Width(260));
+                }
+
+                GUILayout.EndScrollView();
+
+                if (GUI.changed)
+                {
+                    PresetLoadPatch.presetType = (PresetLoadPatch.PresetType)SelGridPreset;
+                }
             }
 
             GUI.enabled = true;

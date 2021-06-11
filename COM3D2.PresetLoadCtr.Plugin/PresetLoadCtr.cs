@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
+using BepInPluginSample;
 using COM3D2.Lilly.Plugin;
 using COM3D2.Lilly.Plugin.Utill;
 using COM3D2API;
@@ -20,13 +21,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         // 단축키 설정파일로 연동
         private ConfigEntry<BepInEx.Configuration.KeyboardShortcut> ShowCounter;
 
-        // GUI ON OFF 설정파일로 저장
-        private ConfigEntry<bool> IsGUIOn;
-        private bool isGUIOn
-        {
-            get => IsGUIOn.Value;
-            set => IsGUIOn.Value = value;
-        }
+
 
         Harmony harmony;
 
@@ -49,18 +44,12 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 return;
             }
 
-
-
             // 단축키 기본값 설정
             ShowCounter = Config.Bind("KeyboardShortcut", "OnOff", new BepInEx.Configuration.KeyboardShortcut(KeyCode.Alpha8, KeyCode.LeftControl));
 
-            // 일반 설정값
-            IsGUIOn = Config.Bind("GUI", "isGUIOn", false);
-
             // 기어 메뉴 추가. 이 플러그인 기능 자체를 멈추려면 enabled 를 꺽어야함. 그러면 OnEnable(), OnDisable() 이 작동함
             //SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { enabled = !enabled; }), "PresetLoadCtr", MyUtill.ExtractResource(Properties.Resources.icon));
-            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { isGUIOn = !isGUIOn; }), "PresetLoadCtr", MyUtill.ExtractResource(Properties.Resources.icon));
-
+            
             PresetLoadUtill.init(Config);
             PresetLoadUtill.LoadList();
         }
@@ -93,21 +82,12 @@ namespace COM3D2.PresetLoadCtr.Plugin
             PresetLoadPatch.presetType = PresetLoadPatch.PresetType.none;
         }
 
-        private const float windowSpace = 40.0f;
-        private Rect windowRect = new Rect(windowSpace, windowSpace, 300f, 600f);
-        private int windowId = new System.Random().Next();
+
 
         public void OnGUI()
         {
-            if (!isGUIOn)
-            {
-                return;
-            }
-            // 윈도우 리사이즈시 밖으로 나가버리는거 방지
-            windowRect.x = Mathf.Clamp(windowRect.x, -windowRect.width + windowSpace, Screen.width - windowSpace);
-            windowRect.y = Mathf.Clamp(windowRect.y, -windowRect.height + windowSpace, Screen.height - windowSpace);
-            windowRect = GUILayout.Window(windowId, windowRect, PresetLoadUtill.WindowFunction, "PresetLoadCtr");
-        }
+            PresetLoadUtill.OnGUI(); 
+                }
 
         public static string scene_name = string.Empty;
 
@@ -145,7 +125,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
             //}
             if (ShowCounter.Value.IsUp())
             {
-                isGUIOn = !isGUIOn;
+                PresetLoadUtill.isGUIOn = !PresetLoadUtill.isGUIOn;
                 MyLog.LogMessage("IsUp", ShowCounter.Value.Modifiers, ShowCounter.Value.MainKey);
             }
         }
