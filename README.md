@@ -5,7 +5,7 @@ BepInEx plugin
 1.55.4 전용  
 
 
-
+![2021-06-08 20 23 53](https://user-images.githubusercontent.com/20321215/121176722-8318f580-c897-11eb-887a-5a6d9834b71e.png)
 
 
 원래 프리셋 저장시 옷만 / 몸만 / 둘다 세종류만 저장 가능  
