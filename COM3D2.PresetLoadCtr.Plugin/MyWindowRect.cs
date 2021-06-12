@@ -24,7 +24,8 @@ namespace BepInPluginSample
 
         private ConfigEntry<bool> isOpen;
 
-        public bool IsOpen {
+        public bool IsOpen
+        {
             get => isOpen.Value;
             set
             {
@@ -67,7 +68,8 @@ namespace BepInPluginSample
             }
         }
 
-        public Rect WindowRect {
+        public Rect WindowRect
+        {
             get
             {
                 // 윈도우 리사이즈시 밖으로 나가버리는거 방지
@@ -83,7 +85,7 @@ namespace BepInPluginSample
         public float X { get => windowRect.x; set => windowRect.x = value; }
         public float Y { get => windowRect.y; set => windowRect.y = value; }
 
-        public MyWindowRect(ConfigFile config, string fileName = "PresetLoadCtr", float wc = 200f, float wo = 300f, float hc = 32f, float ho = 600f, float x = 32f, float y = 32f, float windowSpace = 32f)
+        public MyWindowRect(ConfigFile config, string fileName = "", float wc = 200f, float wo = 300f, float hc = 32f, float ho = 600f, float x = 32f, float y = 32f, float windowSpace = 32f)
         {
             jsonPath = Path.GetDirectoryName(config.ConfigFilePath) + $@"\{fileName}-windowRect.json";
 

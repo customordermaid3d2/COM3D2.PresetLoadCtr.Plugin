@@ -81,7 +81,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         public static void init(ConfigFile Config)
         {
             PresetLoadUtill.Config = Config;
-            myWindowRect = new MyWindowRect(Config, "PresetLoadCtr", 300f);
+            myWindowRect = new MyWindowRect(Config, "PresetLoadCtr");
 
             selGridPreset = Config.Bind("ConfigFile", "selGridPreset", (int)PresetLoadPatch.PresetType.none);
             selGridList = Config.Bind("ConfigFile", "selGridList", (int)ListType.All);
@@ -107,7 +107,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 return;
             }
             // 윈도우 리사이즈시 밖으로 나가버리는거 방지
-            myWindowRect.WindowRect = GUILayout.Window(windowId, myWindowRect.WindowRect, PresetLoadUtill.WindowFunction, "PresetLoadCtr",GUI.skin.box);
+            myWindowRect.WindowRect = GUILayout.Window(windowId, myWindowRect.WindowRect, PresetLoadUtill.WindowFunction, "",GUI.skin.box);
         }
 
         public static void WindowFunction(int id)
@@ -126,8 +126,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
             else
             {
                 scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true);
-
-                GUILayout.Label("now scene.name : " + PresetLoadCtr.scene_name);
+                                
                 GUILayout.Label("Wear Preset file : " + listWear.Count);
                 GUILayout.Label("Body Preset file : " + listBody.Count);
                 GUILayout.Label("Wear/Body Preset file : " + listAll.Count);
