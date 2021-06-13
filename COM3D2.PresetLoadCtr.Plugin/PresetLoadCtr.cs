@@ -63,6 +63,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
             // 하모니 패치
             harmony = Harmony.CreateAndPatchAll(typeof(PresetLoadPatch));
+            PresetLoadUtill.myWindowRect.load();
         }
 
 
@@ -78,8 +79,9 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         public void OnDisable()
         {
-            harmony.UnpatchSelf();
+            PresetLoadUtill.myWindowRect.save();
             PresetLoadPatch.presetType = PresetLoadPatch.PresetType.none;
+            harmony.UnpatchSelf();
         }
 
 
