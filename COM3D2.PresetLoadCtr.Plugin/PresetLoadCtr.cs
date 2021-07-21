@@ -29,7 +29,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         {
             MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
             MyLog.LogMessage("Awake");
-
+            /*
             var overversion = new Version(1,56);
             var gameversion = new Version(GameUty.GetBuildVersionText());
 
@@ -43,7 +43,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 enabled = false;
                 return;
             }
-
+            */
             // 단축키 기본값 설정
             ShowCounter = Config.Bind("KeyboardShortcut", "OnOff", new BepInEx.Configuration.KeyboardShortcut(KeyCode.Alpha8, KeyCode.LeftControl));
 
