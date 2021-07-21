@@ -1,8 +1,8 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using BepInPluginSample;
 using COM3D2.Lilly.Plugin;
 using COM3D2.Lilly.Plugin.Utill;
+using COM3D2.LillyUtill;
 using COM3D2API;
 using HarmonyLib;
 using System;

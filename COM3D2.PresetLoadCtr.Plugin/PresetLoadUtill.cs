@@ -1,6 +1,6 @@
 ﻿using BepInEx.Configuration;
-using BepInPluginSample;
 using COM3D2.Lilly.Plugin;
+using COM3D2.LillyUtill;
 using COM3D2API;
 using System;
 using System.Collections.Generic;
@@ -240,7 +240,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                     return;
                 }
             }
-            MyLog.LogMessage("RandPreset", MyUtill.GetMaidFullName(m_maid));
+            MyLog.LogMessage("RandPreset", m_maid.status.fullNameEnStyle);
 
             List<string> list = lists;
             list = GetList(listType, list);

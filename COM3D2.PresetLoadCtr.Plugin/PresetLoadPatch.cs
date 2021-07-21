@@ -1,4 +1,5 @@
-﻿using COM3D2.PresetLoadCtr.Plugin;
+﻿using COM3D2.LillyUtill;
+using COM3D2.PresetLoadCtr.Plugin;
 using HarmonyLib;
 using scoutmode;
 using System;
@@ -33,7 +34,7 @@ namespace COM3D2.Lilly.Plugin
         public static void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest)
         {
             MyLog.Log("PresetSet.Prefix"
-            , MyUtill.GetMaidFullName(f_maid)
+            , f_maid.status.fullNameEnStyle
             , f_prest.strFileName
             );
             switch (presetType)
