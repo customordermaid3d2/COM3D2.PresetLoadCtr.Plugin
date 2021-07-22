@@ -49,14 +49,31 @@ namespace COM3D2.PresetLoadCtr.Plugin
         public static MyWindowRect myWindowRect;
         private static int windowId = new System.Random().Next();
 
-        public static bool IsOpen
+        public static string windowName = MyAttribute.PLAGIN_NAME;
+        public static string FullName = MyAttribute.PLAGIN_NAME;
+        public static string ShortName = "SP";
+
+        public static bool isOpen
         {
             get => myWindowRect.IsOpen;
-            set => myWindowRect.IsOpen = value;
+            set
+            {
+                myWindowRect.IsOpen = value;
+                if (value)
+                {
+                    windowName = FullName;
+                }
+                else
+                {
+                    windowName = ShortName;
+                }
+            }
         }
+
 
         // GUI ON OFF 설정파일로 저장
         private static ConfigEntry<bool> IsGUIOn;
+
         public static bool isGUIOn
         {
             get => IsGUIOn.Value;
@@ -82,6 +99,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         {
             PresetLoadUtill.Config = Config;
             myWindowRect = new MyWindowRect(Config, "PresetLoadCtr");
+            isOpen = isOpen;
 
             selGridPreset = Config.Bind("ConfigFile", "selGridPreset", (int)PresetLoadPatch.PresetType.none);
             selGridList = Config.Bind("ConfigFile", "selGridList", (int)ListType.All);
@@ -115,11 +133,11 @@ namespace COM3D2.PresetLoadCtr.Plugin
             GUILayout.BeginHorizontal();
             GUILayout.Label("PresetLoadCtr " , GUILayout.Height(20));
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20))) { IsOpen = !IsOpen; }
+            if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20))) { isOpen = !isOpen; }
             if (GUILayout.Button("x", GUILayout.Width(20), GUILayout.Height(20))) { isGUIOn = false; }
             GUILayout.EndHorizontal();
 
-            if (!IsOpen)
+            if (!isOpen)
             {
 
             }
@@ -240,14 +258,14 @@ namespace COM3D2.PresetLoadCtr.Plugin
                     return;
                 }
             }
-            MyLog.LogMessage("RandPreset", m_maid.status.fullNameEnStyle);
+            PresetLoadCtr.myLog.LogMessage("RandPreset", m_maid.status.fullNameEnStyle);
 
             List<string> list = lists;
             list = GetList(listType, list);
 
             if (list.Count == 0)
             {
-                MyLog.LogWarning("RandPreset No list");
+                PresetLoadCtr.myLog.LogWarning("RandPreset No list");
                 return;
             }
 
@@ -279,8 +297,8 @@ namespace COM3D2.PresetLoadCtr.Plugin
             //preset.strFileName = file;
             if (preset == null)
             {
-              //  if (configEntryUtill["SetMaidPreset", false])
-                    MyLog.LogDebug("SetMaidPreset preset null ");
+                //  if (configEntryUtill["SetMaidPreset", false])
+                PresetLoadCtr.myLog.LogDebug("SetMaidPreset preset null ");
                 return;
             }
             GameMain.Instance.CharacterMgr.PresetSet(m_maid, preset);

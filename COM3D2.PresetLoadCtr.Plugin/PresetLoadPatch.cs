@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace COM3D2.Lilly.Plugin
+namespace COM3D2.PresetLoadCtr.Plugin
 {
     //[MyHarmony(MyHarmonyType.Base)]
     class PresetLoadPatch
@@ -33,7 +33,7 @@ namespace COM3D2.Lilly.Plugin
         [HarmonyPrefix]
         public static void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest)
         {
-            MyLog.Log("PresetSet.Prefix"
+            PresetLoadCtr.myLog.Log("PresetSet.Prefix"
             , f_maid.status.fullNameEnStyle
             , f_prest.strFileName
             );
@@ -60,7 +60,7 @@ namespace COM3D2.Lilly.Plugin
         public static void CharacterMgrConstructor(Maid[] ___m_gcActiveMaid)
         {
             m_gcActiveMaid = ___m_gcActiveMaid;
-            MyLog.LogMessage("CharacterMgr.Constructor ");
+            PresetLoadCtr.myLog.LogMessage("CharacterMgr.Constructor ");
         }
 
         public static string[] namesMaid = new string[18];

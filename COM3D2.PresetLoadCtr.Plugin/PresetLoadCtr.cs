@@ -14,21 +14,28 @@ using UnityEngine.SceneManagement;
 
 namespace COM3D2.PresetLoadCtr.Plugin
 {
-    [BepInPlugin("COM3D2.PresetLoadCtr.Plugin", "COM3D2.PresetLoadCtr.Plugin", "21.6.8")]// 버전 규칙 잇음. 반드시 2~4개의 숫자구성으로 해야함. 미준수시 못읽어들임
+    class MyAttribute
+    {
+        public const string PLAGIN_NAME = "PresetLoadCtr";
+        public const string PLAGIN_VERSION = "21.7.22";
+        public const string PLAGIN_FULL_NAME = "COM3D2.PresetLoadCtr.Plugin";
+    }
+
+    [BepInPlugin(MyAttribute.PLAGIN_FULL_NAME, MyAttribute.PLAGIN_NAME, MyAttribute.PLAGIN_VERSION)]// 버전 규칙 잇음. 반드시 2~4개의 숫자구성으로 해야함. 미준수시 못읽어들임
     [BepInProcess("COM3D2x64.exe")]
     public class PresetLoadCtr : BaseUnityPlugin
     {
         // 단축키 설정파일로 연동
         private ConfigEntry<BepInEx.Configuration.KeyboardShortcut> ShowCounter;
 
-
+        public static MyLog myLog = new MyLog(MyAttribute.PLAGIN_NAME);
 
         Harmony harmony;
 
         public void Awake()
         {
-            MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
-            MyLog.LogMessage("Awake");
+            //MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
+            PresetLoadCtr.myLog.LogMessage("Awake");
             /*
             var overversion = new Version(1,56);
             var gameversion = new Version(GameUty.GetBuildVersionText());
@@ -57,7 +64,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         public void OnEnable()
         {
-            MyLog.LogMessage("OnEnable");
+            PresetLoadCtr.myLog.LogMessage("OnEnable");
 
             SceneManager.sceneLoaded += this.OnSceneLoaded;
 
@@ -95,7 +102,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            MyLog.LogMessage("OnSceneLoaded", scene.name, scene.buildIndex);
+            PresetLoadCtr.myLog.LogMessage("OnSceneLoaded", scene.name, scene.buildIndex);
             //  scene.buildIndex 는 쓰지 말자 제발
             scene_name = scene.name;
         }
@@ -128,7 +135,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
             if (ShowCounter.Value.IsUp())
             {
                 PresetLoadUtill.isGUIOn = !PresetLoadUtill.isGUIOn;
-                MyLog.LogMessage("IsUp", ShowCounter.Value.Modifiers, ShowCounter.Value.MainKey);
+                PresetLoadCtr.myLog.LogMessage("IsUp", ShowCounter.Value.Modifiers, ShowCounter.Value.MainKey);
             }
         }
 
