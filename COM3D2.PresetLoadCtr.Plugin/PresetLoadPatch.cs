@@ -52,7 +52,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                     break;
             }
         }
-
+        /*
         public static Maid[] m_gcActiveMaid;
 
         [HarmonyPatch(typeof(CharacterMgr), MethodType.Constructor)]
@@ -62,9 +62,10 @@ namespace COM3D2.PresetLoadCtr.Plugin
             m_gcActiveMaid = ___m_gcActiveMaid;
             PresetLoadCtr.myLog.LogMessage("CharacterMgr.Constructor ");
         }
+        */
 
-        public static string[] namesMaid = new string[18];
-
+       // public static string[] namesMaid = new string[18];
+       /*
         [HarmonyPatch(typeof(CharacterMgr), "SetActive")]
         [HarmonyPostfix]
         public static void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
@@ -87,7 +88,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 namesMaid[f_nActiveSlotNo] = string.Empty;
 
         }
-
+        */
         /// <summary>
         /// 고용 ok 누를시
         /// </summary>

@@ -154,6 +154,9 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 if (GUILayout.Button("Random Preset Run")) { RandPresetRun(); }
                 if (GUILayout.Button("List load")) { LoadList(); }
 
+                if (GUILayout.Button("preset save")) { presetSave(); };
+
+
                 GUILayout.Label("PresetType " + SelGridPreset);
                 SelGridPreset = GUILayout.Toolbar(SelGridPreset, namesPreset);
                 GUILayout.Label("ListType " + SelGridList);
@@ -164,7 +167,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 {
                     GUILayout.Label("Maid List " + selGridmaid);
                     //GUI.enabled = modType == ModType.OneMaid;
-                    selGridmaid = GUILayout.SelectionGrid(selGridmaid, PresetLoadPatch.namesMaid, 1, GUILayout.Width(260));
+                    selGridmaid = GUILayout.SelectionGrid(selGridmaid, MaidActivePatch.maidNames, 1, GUILayout.Width(260));
                 }
 
                 GUILayout.EndScrollView();
@@ -177,6 +180,25 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
             GUI.enabled = true;
             GUI.DragWindow(); // 창 드레그 가능하게 해줌. 마지막에만 넣어야함
+        }
+
+        private static void presetSave()
+        {
+            switch (PresetLoadPatch.presetType)
+            {
+                case PresetLoadPatch.PresetType.Wear:
+                    GameMain.Instance.CharacterMgr.PresetSave(MaidActivePatch.maids[selGridmaid], CharacterMgr.PresetType.Wear);
+                    break;
+                case PresetLoadPatch.PresetType.Body:
+                    GameMain.Instance.CharacterMgr.PresetSave(MaidActivePatch.maids[selGridmaid], CharacterMgr.PresetType.Body);
+                    break;
+                case PresetLoadPatch.PresetType.none:
+                case PresetLoadPatch.PresetType.All:
+                    GameMain.Instance.CharacterMgr.PresetSave(MaidActivePatch.maids[selGridmaid], CharacterMgr.PresetType.All);
+                    break;
+                default:
+                    break;
+            }
         }
 
         private static void RandPresetRun()
@@ -195,20 +217,32 @@ namespace COM3D2.PresetLoadCtr.Plugin
             switch ((ModType)SelGridMod)
             {
                 case ModType.OneMaid:
-                    m_maid = PresetLoadPatch.m_gcActiveMaid[selGridmaid];
+                    m_maid = MaidActivePatch.maids[selGridmaid];
+                    if (m_maid==null)
+                    {
+                        break;
+                    }
                     file = list[rand.Next(list.Count)];
                     SetMaidPreset(m_maid, file);
                     break;
                 case ModType.AllMaid_OnePreset:
                     file = list[rand.Next(list.Count)];
-                    foreach (var item in PresetLoadPatch.m_gcActiveMaid)
+                    foreach (var item in MaidActivePatch.maids)
                     {
+                        if (item == null)
+                        {
+                            continue;
+                        }
                         SetMaidPreset(item, file);
                     }
                     break;
                 case ModType.AllMaid_RandomPreset:
-                    foreach (var item in PresetLoadPatch.m_gcActiveMaid)
+                    foreach (var item in MaidActivePatch.maids)
                     {
+                        if (item == null)
+                        {
+                            continue;
+                        }
                         file = list[rand.Next(list.Count)];
                         SetMaidPreset(item, file);
                     }
