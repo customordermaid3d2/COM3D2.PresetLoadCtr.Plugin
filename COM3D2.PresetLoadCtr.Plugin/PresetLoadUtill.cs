@@ -150,32 +150,42 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 GUILayout.Label("Wear/Body Preset file : " + listAll.Count);
                 GUILayout.Label("All  Preset file : " + lists.Count);
 
-                if (GUILayout.Button("Random Preset Run Auto " + IsAuto)) { IsAuto = !IsAuto; }
-                if (GUILayout.Button("Random Preset Run")) { RandPresetRun(); }
-                if (GUILayout.Button("List load")) { LoadList(); }
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Random Auto " + IsAuto)) { IsAuto = !IsAuto; }
+                if (GUILayout.Button("Random Run")) { RandPresetRun(); }
+                GUILayout.EndHorizontal();
 
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("List load")) { LoadList(); }
                 if (GUILayout.Button("preset save")) { presetSave(); };
+                GUILayout.EndHorizontal();
 
 
                 GUILayout.Label("PresetType " + SelGridPreset);
                 SelGridPreset = GUILayout.Toolbar(SelGridPreset, namesPreset);
+
+                if (GUI.changed)
+                {
+                    PresetLoadPatch.presetType = (PresetLoadPatch.PresetType)SelGridPreset;
+                    GUI.changed = false;
+                }
+
                 GUILayout.Label("ListType " + SelGridList);
                 SelGridList = GUILayout.SelectionGrid(SelGridList, namesList, 2);
                 GUILayout.Label("ModType " + SelGridMod);
                 SelGridMod = GUILayout.SelectionGrid(SelGridMod, namesMod, 1);
                 if ((ModType)SelGridMod == ModType.OneMaid)
                 {
-                    GUILayout.Label("Maid List " + selGridmaid);
+                    //GUILayout.Label("Maid List " + selGridmaid);
                     //GUI.enabled = modType == ModType.OneMaid;
-                    selGridmaid = GUILayout.SelectionGrid(selGridmaid, MaidActivePatch.maidNames, 1, GUILayout.Width(260));
+                    //selGridmaid = GUILayout.SelectionGrid(selGridmaid, MaidActivePatch.maidNames, 1, GUILayout.Width(260));
+
+                    selGridmaid=MaidActivePatch.SelectionGrid(selGridmaid,3,false);
                 }
 
                 GUILayout.EndScrollView();
 
-                if (GUI.changed)
-                {
-                    PresetLoadPatch.presetType = (PresetLoadPatch.PresetType)SelGridPreset;
-                }
+
             }
 
             GUI.enabled = true;
@@ -184,21 +194,30 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         private static void presetSave()
         {
+            var maid = MaidActivePatch.maids[selGridmaid];
+            if (maid ==null)
+            {
+                return;
+            }
+
+            CharacterMgr.PresetType presetType = CharacterMgr.PresetType.All;
             switch (PresetLoadPatch.presetType)
             {
                 case PresetLoadPatch.PresetType.Wear:
-                    GameMain.Instance.CharacterMgr.PresetSave(MaidActivePatch.maids[selGridmaid], CharacterMgr.PresetType.Wear);
+                    presetType = CharacterMgr.PresetType.Wear;
                     break;
                 case PresetLoadPatch.PresetType.Body:
-                    GameMain.Instance.CharacterMgr.PresetSave(MaidActivePatch.maids[selGridmaid], CharacterMgr.PresetType.Body);
+                    presetType = CharacterMgr.PresetType.Body;                    
                     break;
                 case PresetLoadPatch.PresetType.none:
                 case PresetLoadPatch.PresetType.All:
-                    GameMain.Instance.CharacterMgr.PresetSave(MaidActivePatch.maids[selGridmaid], CharacterMgr.PresetType.All);
+                    presetType = CharacterMgr.PresetType.All;                    
                     break;
                 default:
                     break;
             }
+
+            GameMain.Instance.CharacterMgr.PresetSave(maid, presetType );
         }
 
         private static void RandPresetRun()

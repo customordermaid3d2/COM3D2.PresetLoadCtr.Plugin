@@ -36,6 +36,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         {
             //MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
             PresetLoadCtr.myLog.LogMessage("Awake");
+            PresetLoadCtr.myLog.LogMessage("https://github.com/customordermaid3d2/COM3D2.PresetLoadCtr.Plugin");
 
             /*
             var overversion = new Version(1,56);
