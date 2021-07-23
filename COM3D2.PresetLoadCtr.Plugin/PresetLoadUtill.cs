@@ -98,7 +98,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         public static void init(ConfigFile Config)
         {
             PresetLoadUtill.Config = Config;
-            myWindowRect = new MyWindowRect(Config, "PresetLoadCtr");
+            myWindowRect = new MyWindowRect(Config, MyAttribute.PLAGIN_FULL_NAME, "PresetLoadCtr", "PLCtr");
             isOpen = isOpen;
 
             selGridPreset = Config.Bind("ConfigFile", "selGridPreset", (int)PresetLoadPatch.PresetType.none);
@@ -131,7 +131,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         public static void WindowFunction(int id)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label("PresetLoadCtr " , GUILayout.Height(20));
+            GUILayout.Label(myWindowRect.windowName, GUILayout.Height(20));
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20))) { isOpen = !isOpen; }
             if (GUILayout.Button("x", GUILayout.Width(20), GUILayout.Height(20))) { isGUIOn = false; }

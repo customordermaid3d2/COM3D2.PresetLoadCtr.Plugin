@@ -36,6 +36,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         {
             //MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
             PresetLoadCtr.myLog.LogMessage("Awake");
+
             /*
             var overversion = new Version(1,56);
             var gameversion = new Version(GameUty.GetBuildVersionText());
@@ -51,6 +52,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 return;
             }
             */
+            
             // 단축키 기본값 설정
             ShowCounter = Config.Bind("KeyboardShortcut", "OnOff", new BepInEx.Configuration.KeyboardShortcut(KeyCode.Alpha8, KeyCode.LeftControl));
 
@@ -74,16 +76,6 @@ namespace COM3D2.PresetLoadCtr.Plugin
         }
 
 
-        public void FixedUpdate()
-        {
-             
-        }
-
-        public void LateUpdate()
-        {
-             
-        }
-
         public void OnDisable()
         {
             PresetLoadUtill.myWindowRect.save();
@@ -96,7 +88,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         public void OnGUI()
         {
             PresetLoadUtill.OnGUI(); 
-                }
+        }
 
         public static string scene_name = string.Empty;
 
@@ -105,21 +97,6 @@ namespace COM3D2.PresetLoadCtr.Plugin
             PresetLoadCtr.myLog.LogMessage("OnSceneLoaded", scene.name, scene.buildIndex);
             //  scene.buildIndex 는 쓰지 말자 제발
             scene_name = scene.name;
-        }
-
-        public void Pause()
-        {
-             
-        }
-
-        public void Resume()
-        {
-             
-        }
-
-        public void Start()
-        {
-             
         }
 
         public void Update()
