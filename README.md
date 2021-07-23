@@ -20,6 +20,14 @@ BepInEx plugin
 
 https://youtu.be/2Jec0Cynf0E
 
+- Random Preset Run Auto : 신규 생성시 자동 적용(안되는거 같다)
+- Random Preset Run : 목록에서 랜덤 프리셋 적용
+- List load : 리스트 재로딩
+- preset save : 프리셋 저장
+- PresetType : 프리셋 읽어올때 어떻게 일어올지? 프리셋 파일 기본값 / 옷만  몸만 / 옷 몸 둘다
+- ListType : "Random Preset Run" 사용시 참조할 목록
+- ModType : 적용할 메이드. 선택한 메이드 / 모든 메이드에게 똑같은옷 / 모든 메이드에게 다른옷
+
 
 # 설치 위치
 
