@@ -98,6 +98,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
             isNewMaid = true;
         }
 
+        ///
         [HarmonyPostfix, HarmonyPatch(typeof(ScoutMainScreenManager), "AddScoutMaid")]
         public static void AddScoutMaid(ScoutMainScreenManager __instance)
         {
@@ -114,6 +115,17 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 newMaidSetting();
             }
         }
+
+        /// <summary>
+        /// public Maid AddStockMaid()
+        /// 로딩시에도 불러와서 이방법 위험
+        /// </summary>
+        // [HarmonyPatch(typeof(CharacterMgr), "AddStockMaid")]
+        // [HarmonyPostfix]
+        // public static void AddStockMaid(Maid __result) // Maid ___m_maid,SceneEdit __instance
+        // {
+        //     PresetUtill.SetMaidRandPreset(__result);            /// 로딩시에도 불러와서 이방법 위험
+        // }
 
 
         public static void newMaidSetting()
