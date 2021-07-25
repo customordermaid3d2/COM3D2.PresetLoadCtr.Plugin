@@ -2,8 +2,9 @@
 
 BepInEx plugin  
 
-1.55.4 전용  
+2.3.0 전용  
 
+https://youtu.be/v10GHR0BDmo
 
 ![2021-06-08 20 23 53](https://user-images.githubusercontent.com/20321215/121176722-8318f580-c897-11eb-887a-5a6d9834b71e.png)
 
@@ -14,11 +15,7 @@ BepInEx plugin
 
 프리셋 읽어올때 옷만 일어오게끔 설정된 프리셋을 강제로 옷만 / 몸만 / 둘다 로 바궈서 읽어오게끔 바꿔주는거  
 
-
-덤으로 신규 고용시(스카우트 새로 생성 포함) 현제 가진 프리셋중 랜덤으로 자동 적용됨  
-
-
-https://youtu.be/2Jec0Cynf0E
+덤으로 신규 고용시(스카우트 새로 생성 포함) 현제 가진 프리셋중 랜덤으로 자동 적용됨  (안되는거 같다)
 
 - Random Preset Run Auto : 신규 생성시 자동 적용(안되는거 같다)
 - Random Preset Run : 목록에서 랜덤 프리셋 적용
