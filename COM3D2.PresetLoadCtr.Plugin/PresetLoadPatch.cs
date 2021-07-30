@@ -138,6 +138,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 return;
             }
             Maid maid = GameMain.Instance.CharacterMgr.GetMaid(0);
+            PersonalUtill.SetPersonalRandom(maid);
             PresetLoadUtill.RandPreset(maid);
             isNewMaid = false;
         }
