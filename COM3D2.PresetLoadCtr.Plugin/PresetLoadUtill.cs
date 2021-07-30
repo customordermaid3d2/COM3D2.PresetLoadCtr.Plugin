@@ -80,7 +80,9 @@ namespace COM3D2.PresetLoadCtr.Plugin
             set => IsGUIOn.Value = value;
         }
 
-        public enum ListType
+        //public static MyLog myLog;
+
+       public enum ListType
         {
             Wear,
             Body,
@@ -152,11 +154,11 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("Random Auto " + IsAuto)) { IsAuto = !IsAuto; }
-                if (GUILayout.Button("Random Run")) { RandPresetRun(); }
+                if (GUILayout.Button("List load")) { LoadList(); }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("List load")) { LoadList(); }
+                if (GUILayout.Button("Random Run")) { RandPresetRun(); }
                 if (GUILayout.Button("preset save")) { presetSave(); };
                 GUILayout.EndHorizontal();
 
@@ -180,7 +182,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                     //GUI.enabled = modType == ModType.OneMaid;
                     //selGridmaid = GUILayout.SelectionGrid(selGridmaid, MaidActivePatch.maidNames, 1, GUILayout.Width(260));
 
-                    selGridmaid=MaidActivePatch.SelectionGrid(selGridmaid,3,false);
+                    selGridmaid=MaidActivePatch.SelectionGrid(selGridmaid,3,265,false);
                 }
 
                 GUILayout.EndScrollView();
@@ -227,7 +229,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
             if (list.Count == 0)
             {
-                UnityEngine.Debug.LogWarning("RandPreset No list");
+                PresetLoadCtr.myLog.LogWarning("RandPreset No list");
                 return;
             }
 
@@ -351,7 +353,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
             if (preset == null)
             {
                 //  if (configEntryUtill["SetMaidPreset", false])
-                PresetLoadCtr.myLog.LogDebug("SetMaidPreset preset null ");
+                PresetLoadCtr.myLog.LogWarning("SetMaidPreset preset null ");
                 return;
             }
             GameMain.Instance.CharacterMgr.PresetSet(m_maid, preset);

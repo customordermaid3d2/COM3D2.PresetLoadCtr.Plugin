@@ -95,6 +95,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         [HarmonyPostfix, HarmonyPatch(typeof(MaidManagementMain), "Employment")]
         public static void Employment(string ___new_edit_label_)
         {
+            PresetLoadCtr.myLog.LogMessage("MaidManagementMain.Employment", PresetLoadUtill.IsAuto);
             isNewMaid = true;
         }
 
@@ -102,6 +103,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         [HarmonyPostfix, HarmonyPatch(typeof(ScoutMainScreenManager), "AddScoutMaid")]
         public static void AddScoutMaid(ScoutMainScreenManager __instance)
         {
+            PresetLoadCtr.myLog.LogMessage("ScoutMainScreenManager.AddScoutMaid", PresetLoadUtill.IsAuto);
             isNewMaid = true;
         }
 
@@ -110,6 +112,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         [HarmonyPostfix]
         public static void OnCompleteFadeIn() // Maid ___m_maid,SceneEdit __instance
         {
+            PresetLoadCtr.myLog.LogMessage("SceneEdit.OnCompleteFadeIn", PresetLoadUtill.IsAuto);
             if (PresetLoadUtill.IsAuto)
             {
                 newMaidSetting();
