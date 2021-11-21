@@ -1,7 +1,5 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using COM3D2.Lilly.Plugin;
-using COM3D2.Lilly.Plugin.Utill;
 using COM3D2.LillyUtill;
 using COM3D2API;
 using HarmonyLib;
@@ -17,7 +15,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
     class MyAttribute
     {
         public const string PLAGIN_NAME = "PresetLoadCtr";
-        public const string PLAGIN_VERSION = "21.7.22";
+        public const string PLAGIN_VERSION = "21.11.21";
         public const string PLAGIN_FULL_NAME = "COM3D2.PresetLoadCtr.Plugin";
     }
 
@@ -28,12 +26,13 @@ namespace COM3D2.PresetLoadCtr.Plugin
         // 단축키 설정파일로 연동
         private ConfigEntry<BepInEx.Configuration.KeyboardShortcut> ShowCounter;
 
-        public static MyLog myLog = new MyLog(MyAttribute.PLAGIN_NAME);
+        public static MyLog myLog;//= new MyLog(MyAttribute.PLAGIN_NAME);
 
         Harmony harmony;
 
         public void Awake()
         {
+            myLog = new MyLog(Logger,Config);
             //MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
             PresetLoadCtr.myLog.LogMessage("Awake");
             PresetLoadCtr.myLog.LogMessage("https://github.com/customordermaid3d2/COM3D2.PresetLoadCtr.Plugin");
@@ -69,7 +68,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         {
             PresetLoadCtr.myLog.LogMessage("OnEnable");
 
-            SceneManager.sceneLoaded += this.OnSceneLoaded;
+            //SceneManager.sceneLoaded += this.OnSceneLoaded;
 
             // 하모니 패치
             harmony = Harmony.CreateAndPatchAll(typeof(PresetLoadPatch));
@@ -79,7 +78,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         public void OnDisable()
         {
-            PresetLoadUtill.myWindowRect.save();
+            //PresetLoadUtill.myWindowRect.save();
             PresetLoadPatch.presetType = PresetLoadPatch.PresetType.none;
             harmony.UnpatchSelf();
         }
@@ -90,7 +89,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         {
             PresetLoadUtill.OnGUI(); 
         }
-
+        /*
         public static string scene_name = string.Empty;
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -99,7 +98,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
             //  scene.buildIndex 는 쓰지 말자 제발
             scene_name = scene.name;
         }
-
+        */
         public void Update()
         {
             //if (ShowCounter.Value.IsDown())
