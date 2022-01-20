@@ -175,12 +175,12 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 GUILayout.Label("All  Preset file : " + lists.Count);
 
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Random Run")) { RandPresetRun(); }
-                if (GUILayout.Button("Random Auto " + IsAuto)) { IsAuto = !IsAuto; }
+                if (GUILayout.Button("List load")) { LoadList(); }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("List load")) { LoadList(); }
+                if (GUILayout.Button("Random Run")) { RandPresetRun(); }
+                if (GUILayout.Button("Random Auto " + IsAuto)) { IsAuto = !IsAuto; }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
