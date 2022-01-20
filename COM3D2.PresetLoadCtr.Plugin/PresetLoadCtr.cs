@@ -15,7 +15,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
     class MyAttribute
     {
         public const string PLAGIN_NAME = "PresetLoadCtr";
-        public const string PLAGIN_VERSION = "21.11.21";
+        public const string PLAGIN_VERSION = "22.01.20.15";
         public const string PLAGIN_FULL_NAME = "COM3D2.PresetLoadCtr.Plugin";
     }
 
@@ -34,8 +34,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         {
             myLog = new MyLog(Logger,Config);
             //MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
-            PresetLoadCtr.myLog.LogMessage("Awake");
-            PresetLoadCtr.myLog.LogMessage("https://github.com/customordermaid3d2/COM3D2.PresetLoadCtr.Plugin");
+            PresetLoadCtr.myLog.LogMessage("Awake https://github.com/customordermaid3d2/COM3D2.PresetLoadCtr.Plugin");
 
             /*
             var overversion = new Version(1,56);
