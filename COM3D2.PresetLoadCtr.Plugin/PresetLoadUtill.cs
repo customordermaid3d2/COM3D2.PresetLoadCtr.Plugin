@@ -261,8 +261,12 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         private static CharacterMgr.Preset presetGet()
         {
-            isShowDialogLoadRun = true;
             CharacterMgr.Preset preset = null;
+            if (isShowDialogLoadRun)
+            {
+                return preset;
+            }
+            isShowDialogLoadRun = true;
             if (openDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)// 오픈했을때
             {
                 preset = GameMain.Instance.CharacterMgr.PresetLoad(openDialog.FileName);

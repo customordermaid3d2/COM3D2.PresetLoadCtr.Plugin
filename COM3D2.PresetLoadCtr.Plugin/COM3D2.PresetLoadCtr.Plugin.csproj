@@ -115,8 +115,8 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy "$(TargetDir)*.dll" "C:\Downloads\plugin"
-copy "$(TargetDir)*.dll" "F:\COM3D2\BepInEx\plugins"
-copy "$(TargetDir)*.dll" "F:\COM3D2-test\BepInEx\plugins"</PostBuildEvent>
+copy "$(TargetDir)*.dll" "h:\COM3D2\BepInEx\plugins"
+copy "$(TargetDir)*.dll" "h:\COM3D2-test\BepInEx\plugins"</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\BepInEx.Core.5.4.17\build\BepInEx.Core.targets" Condition="Exists('..\packages\BepInEx.Core.5.4.17\build\BepInEx.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
