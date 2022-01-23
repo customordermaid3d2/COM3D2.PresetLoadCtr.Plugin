@@ -179,13 +179,13 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Random Run")) { RandPresetRun(); }
-                if (GUILayout.Button("Random Auto " + IsAuto)) { IsAuto = !IsAuto; }
+                if (GUILayout.Button("preset load")) { presetLoad(); };
+                if (GUILayout.Button("preset save")) { presetSave(); };
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("preset load")) { presetLoad(); };
-                if (GUILayout.Button("preset save")) { presetSave(); };
+                if (GUILayout.Button("Random Run")) { RandPresetRun(); }
+                if (GUILayout.Button("Random Auto " + IsAuto)) { IsAuto = !IsAuto; }
                 GUILayout.EndHorizontal();
 
 
@@ -295,7 +295,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         private static void presetSave()
         {
-            var maid = MaidActivePatch.maids[selGridmaid];
+            var maid = MaidActivePatch.GetMaid(selGridmaid);
             if (maid == null)
             {
                 return;
@@ -337,7 +337,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
             switch ((ModType)SelGridMod)
             {
                 case ModType.OneMaid:
-                    m_maid = MaidActivePatch.maids[selGridmaid];
+                    m_maid = MaidActivePatch.GetMaid(selGridmaid);
                     if (m_maid == null)
                     {
                         break;
@@ -347,7 +347,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                     break;
                 case ModType.AllMaid_OnePreset:
                     file = list[rand.Next(list.Count)];
-                    foreach (var item in MaidActivePatch.maids)
+                    foreach (var item in MaidActivePatch.GetMaidAll())
                     {
                         if (item == null)
                         {
@@ -357,7 +357,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                     }
                     break;
                 case ModType.AllMaid_RandomPreset:
-                    foreach (var item in MaidActivePatch.maids)
+                    foreach (var item in MaidActivePatch.GetMaidAll())
                     {
                         if (item == null)
                         {
