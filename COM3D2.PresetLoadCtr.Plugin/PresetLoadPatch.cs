@@ -10,6 +10,32 @@ using System.Text;
 
 namespace COM3D2.PresetLoadCtr.Plugin
 {
+    class PresetLoadPatch2
+    {
+        // public void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest, bool forceBody = false) // 157
+        // public void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest) // 155
+        // 테스팅 완료
+        [HarmonyPatch(typeof(CharacterMgr), "PresetSet", new Type[] { typeof(Maid), typeof(CharacterMgr.Preset) })]
+        [HarmonyPrefix]
+        public static void PresetSet2(Maid f_maid, CharacterMgr.Preset f_prest)
+        {
+            PresetLoadPatch.PresetSet(f_maid, f_prest);
+        }
+    }
+    
+    class PresetLoadPatch25
+    {
+        // public void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest, bool forceBody = false) // 157
+        // public void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest) // 155
+        // 테스팅 완료
+        [HarmonyPatch(typeof(CharacterMgr), "PresetSet", new Type[] { typeof(Maid), typeof(CharacterMgr.Preset), typeof(bool) })]
+        [HarmonyPrefix]
+        public static void PresetSet2(Maid f_maid, CharacterMgr.Preset f_prest)
+        {
+            PresetLoadPatch.PresetSet(f_maid, f_prest);
+        }
+    }
+
     //[MyHarmony(MyHarmonyType.Base)]
     class PresetLoadPatch
     {
@@ -31,6 +57,28 @@ namespace COM3D2.PresetLoadCtr.Plugin
         // 테스팅 완료
         [HarmonyPatch(typeof(CharacterMgr), "PresetSet", new Type[] { typeof(Maid), typeof(CharacterMgr.Preset) })]
         [HarmonyPrefix]
+        public static void PresetSet2(Maid f_maid, CharacterMgr.Preset f_prest)
+        {
+            PresetLoadCtr.myLog.Log("PresetSet.Prefix"
+            , f_maid.status.fullNameEnStyle
+            , f_prest.strFileName
+            );
+            switch (presetType)
+            {
+                case PresetType.Wear:
+                    f_prest.ePreType = CharacterMgr.PresetType.Wear;
+                    break;
+                case PresetType.Body:
+                    f_prest.ePreType = CharacterMgr.PresetType.Body;
+                    break;
+                case PresetType.All:
+                    f_prest.ePreType = CharacterMgr.PresetType.All;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         public static void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest)
         {
             PresetLoadCtr.myLog.Log("PresetSet.Prefix"
@@ -52,43 +100,44 @@ namespace COM3D2.PresetLoadCtr.Plugin
                     break;
             }
         }
+
         /*
-        public static Maid[] m_gcActiveMaid;
+public static Maid[] m_gcActiveMaid;
 
-        [HarmonyPatch(typeof(CharacterMgr), MethodType.Constructor)]
-        [HarmonyPostfix]
-        public static void CharacterMgrConstructor(Maid[] ___m_gcActiveMaid)
-        {
-            m_gcActiveMaid = ___m_gcActiveMaid;
-            PresetLoadCtr.myLog.LogMessage("CharacterMgr.Constructor ");
-        }
-        */
+[HarmonyPatch(typeof(CharacterMgr), MethodType.Constructor)]
+[HarmonyPostfix]
+public static void CharacterMgrConstructor(Maid[] ___m_gcActiveMaid)
+{
+   m_gcActiveMaid = ___m_gcActiveMaid;
+   PresetLoadCtr.myLog.LogMessage("CharacterMgr.Constructor ");
+}
+*/
 
-       // public static string[] namesMaid = new string[18];
-       /*
-        [HarmonyPatch(typeof(CharacterMgr), "SetActive")]
-        [HarmonyPostfix]
-        public static void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
-        {
-            //if (configEntryUtill["SetActive", false])
-            //    MyLog.LogMessage("CharacterMgr.SetActive", f_nActiveSlotNo, MyUtill.GetMaidFullName(f_maid));
-            if (!f_bMan)
-                namesMaid[f_nActiveSlotNo] = f_maid.status.fullNameEnStyle;
-                //namesMaid[f_nActiveSlotNo] = MyUtill.GetMaidFullName(f_maid);
-        }
+        // public static string[] namesMaid = new string[18];
+        /*
+         [HarmonyPatch(typeof(CharacterMgr), "SetActive")]
+         [HarmonyPostfix]
+         public static void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
+         {
+             //if (configEntryUtill["SetActive", false])
+             //    MyLog.LogMessage("CharacterMgr.SetActive", f_nActiveSlotNo, MyUtill.GetMaidFullName(f_maid));
+             if (!f_bMan)
+                 namesMaid[f_nActiveSlotNo] = f_maid.status.fullNameEnStyle;
+                 //namesMaid[f_nActiveSlotNo] = MyUtill.GetMaidFullName(f_maid);
+         }
 
-        // private void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
-        [HarmonyPatch(typeof(CharacterMgr), "Deactivate")]
-        [HarmonyPrefix]
-        public static void Deactivate(int f_nActiveSlotNo, bool f_bMan)
-        {
-            //if (configEntryUtill["Deactivate", false])
-            //    MyLog.LogMessage("CharacterMgr.Deactivate", f_nActiveSlotNo);// HarmonyPrefix로 했는데도 m_gcActiveMaid 에선 제거되있네
-            if (!f_bMan)
-                namesMaid[f_nActiveSlotNo] = string.Empty;
+         // private void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
+         [HarmonyPatch(typeof(CharacterMgr), "Deactivate")]
+         [HarmonyPrefix]
+         public static void Deactivate(int f_nActiveSlotNo, bool f_bMan)
+         {
+             //if (configEntryUtill["Deactivate", false])
+             //    MyLog.LogMessage("CharacterMgr.Deactivate", f_nActiveSlotNo);// HarmonyPrefix로 했는데도 m_gcActiveMaid 에선 제거되있네
+             if (!f_bMan)
+                 namesMaid[f_nActiveSlotNo] = string.Empty;
 
-        }
-        */
+         }
+         */
         /// <summary>
         /// 고용 ok 누를시
         /// </summary>

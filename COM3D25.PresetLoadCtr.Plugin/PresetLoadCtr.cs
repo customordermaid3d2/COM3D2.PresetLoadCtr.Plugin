@@ -10,9 +10,9 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace COM3D2.PresetLoadCtr.Plugin
+namespace COM3D25.PresetLoadCtr.Plugin
 {
-    class MyAttribute
+    public class MyAttribute
     {
         public const string PLAGIN_NAME = "PresetLoadCtr";
         public const string PLAGIN_VERSION = "22.02.22";

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace COM3D2.PresetLoadCtr.Plugin
+namespace COM3D25.PresetLoadCtr.Plugin
 {
 
 
@@ -52,7 +52,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         public static string FullName = MyAttribute.PLAGIN_NAME;
         public static string ShortName = "SP";
 
-
+        /*
         public static bool isOpen
         {
             get => myWindowRect.IsOpen;
@@ -69,7 +69,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                 }
             }
         }
-
+        */
 
         // GUI ON OFF 설정파일로 저장
         private static ConfigEntry<bool> IsGUIOn;
@@ -102,11 +102,26 @@ namespace COM3D2.PresetLoadCtr.Plugin
 
         public static void init(ConfigFile Config)
         {
+
+                PresetLoadUtill.Config = Config;
+
             try
             {
-                PresetLoadUtill.Config = Config;
-                myWindowRect = new MyWindowRect(Config, MyAttribute.PLAGIN_FULL_NAME, "PresetLoadCtr", "PLCtr");
-                isOpen = isOpen;
+                if (Config ==null)
+                {
+                    PresetLoadCtr.myLog.LogError("Config is null" );
+                }
+                else
+                {
+                    PresetLoadCtr.myLog.LogMessage("Config is not null");
+                }
+                myWindowRect = new MyWindowRect(Config, "COM3D2.PresetLoadCtr.Plugin", "PresetLoadCtr", "PLCtr");
+            }
+            catch (Exception e)
+            {
+                PresetLoadCtr.myLog.LogError("MyWindowRect : " + e.ToString());
+            }
+            //isOpen = isOpen;
 
                 selGridPreset = Config.Bind("ConfigFile", "selGridPreset", (int)PresetLoadPatch.PresetType.none);
                 selGridList = Config.Bind("ConfigFile", "selGridList", (int)ListType.All);
@@ -133,11 +148,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
                     // 선택 가능 확장자
                     Filter = "preset files (*.preset)|*.preset|All files (*.*)|*.*"
                 };
-            }
-            catch (Exception e)
-            {
-                PresetLoadCtr.myLog.LogError(e.ToString());
-            }
+
         }
 
         private static Vector2 scrollPosition;
@@ -157,11 +168,11 @@ namespace COM3D2.PresetLoadCtr.Plugin
             GUILayout.BeginHorizontal();
             GUILayout.Label(myWindowRect.windowName, GUILayout.Height(20));
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20))) { isOpen = !isOpen; }
+            if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20))) { myWindowRect.IsOpen = !myWindowRect.IsOpen; }
             if (GUILayout.Button("x", GUILayout.Width(20), GUILayout.Height(20))) { isGUIOn = false; }
             GUILayout.EndHorizontal();
 
-            if (!isOpen)
+            if (!myWindowRect.IsOpen)
             {
 
             }

@@ -1,5 +1,4 @@
 ﻿using COM3D25.LillyUtill;
-using COM3D2.PresetLoadCtr.Plugin;
 using HarmonyLib;
 using scoutmode;
 using System;
@@ -8,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace COM3D2.PresetLoadCtr.Plugin
+namespace COM3D25.PresetLoadCtr.Plugin
 {
     //[MyHarmony(MyHarmonyType.Base)]
     class PresetLoadPatch
@@ -29,7 +28,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
         // public void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest, bool forceBody = false) // 157
         // public void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest) // 155
         // 테스팅 완료
-        [HarmonyPatch(typeof(CharacterMgr), "PresetSet", new Type[] { typeof(Maid), typeof(CharacterMgr.Preset) })]
+        [HarmonyPatch(typeof(CharacterMgr), "PresetSet", new Type[] { typeof(Maid), typeof(CharacterMgr.Preset), typeof(bool) })]
         [HarmonyPrefix]
         public static void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest)
         {

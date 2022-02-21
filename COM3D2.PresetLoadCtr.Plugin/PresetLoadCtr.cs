@@ -15,7 +15,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
     class MyAttribute
     {
         public const string PLAGIN_NAME = "PresetLoadCtr";
-        public const string PLAGIN_VERSION = "22.01.20.15";
+        public const string PLAGIN_VERSION = "22.02.22";
         public const string PLAGIN_FULL_NAME = "COM3D2.PresetLoadCtr.Plugin";
     }
 
@@ -29,6 +29,8 @@ namespace COM3D2.PresetLoadCtr.Plugin
         public static MyLog myLog;//= new MyLog(MyAttribute.PLAGIN_NAME);
 
         Harmony harmony;
+        //Harmony harmony2;
+        //Type type;
 
         public void Awake()
         {
@@ -36,22 +38,18 @@ namespace COM3D2.PresetLoadCtr.Plugin
             //MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
             PresetLoadCtr.myLog.LogMessage("Awake https://github.com/customordermaid3d2/COM3D2.PresetLoadCtr.Plugin");
 
-            /*
-            var overversion = new Version(1,56);
-            var gameversion = new Version(GameUty.GetBuildVersionText());
+            //var overversion = new Version(3,0);
+            //var gameversion = new Version(GameUty.GetBuildVersionText());
+            //PresetLoadCtr.myLog.LogMessage($"Version {gameversion}");
+            //if (gameversion> overversion)
+            //{
+            //    type = typeof(PresetLoadPatch25);
+            //}
+            //else
+            //{
+            //    type = typeof(PresetLoadPatch2);
+            //}
 
-            //if (!Misc.GAME_VERSION.ToString().StartsWith("155"))
-            if(gameversion > overversion)
-            {
-                MyLog.LogWarning("GAME_VERSION not support");
-                MyLog.LogError("Misc.GAME_VERSION : "+ Misc.GAME_VERSION);
-                MyLog.LogWarning("GAME_VERSION not support");
-
-                enabled = false;
-                return;
-            }
-            */
-            
             // 단축키 기본값 설정
             ShowCounter = Config.Bind("KeyboardShortcut", "OnOff", new BepInEx.Configuration.KeyboardShortcut(KeyCode.Alpha8, KeyCode.LeftControl));
 
@@ -70,7 +68,10 @@ namespace COM3D2.PresetLoadCtr.Plugin
             //SceneManager.sceneLoaded += this.OnSceneLoaded;
 
             // 하모니 패치
+
+            
             harmony = Harmony.CreateAndPatchAll(typeof(PresetLoadPatch));
+            //harmony2 = Harmony.CreateAndPatchAll(type);
             PresetLoadUtill.myWindowRect.load();
         }
 
@@ -80,6 +81,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
             //PresetLoadUtill.myWindowRect.save();
             PresetLoadPatch.presetType = PresetLoadPatch.PresetType.none;
             harmony.UnpatchSelf();
+            //harmony2.UnpatchSelf();
         }
 
 
