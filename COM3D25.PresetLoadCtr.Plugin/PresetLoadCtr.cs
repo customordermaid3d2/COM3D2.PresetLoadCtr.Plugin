@@ -1,6 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using COM3D2.LillyUtill;
+using COM3D25.LillyUtill;
 using COM3D2API;
 using HarmonyLib;
 using System;
@@ -15,7 +15,7 @@ namespace COM3D2.PresetLoadCtr.Plugin
     class MyAttribute
     {
         public const string PLAGIN_NAME = "PresetLoadCtr";
-        public const string PLAGIN_VERSION = "22.01.20.15";
+        public const string PLAGIN_VERSION = "22.02.22";
         public const string PLAGIN_FULL_NAME = "COM3D2.PresetLoadCtr.Plugin";
     }
 
