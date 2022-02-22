@@ -36,6 +36,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
         internal static ConfigEntry<bool> isAuto;
         internal static bool isLoadList;
 
+        internal static ConfigEntry<bool> Maid_SetProp_log;
 
         public static int SelGridPreset { get => selGridPreset.Value; set => selGridPreset.Value = value; }
         public static int SelGridList { get => selGridList.Value; set => selGridList.Value = value; }
@@ -52,24 +53,6 @@ namespace COM3D25.PresetLoadCtr.Plugin
         public static string FullName = MyAttribute.PLAGIN_NAME;
         public static string ShortName = "SP";
 
-        /*
-        public static bool isOpen
-        {
-            get => myWindowRect.IsOpen;
-            set
-            {
-                myWindowRect.IsOpen = value;
-                if (value)
-                {
-                    windowName = FullName;
-                }
-                else
-                {
-                    windowName = ShortName;
-                }
-            }
-        }
-        */
 
         // GUI ON OFF 설정파일로 저장
         private static ConfigEntry<bool> IsGUIOn;
@@ -103,13 +86,13 @@ namespace COM3D25.PresetLoadCtr.Plugin
         public static void init(ConfigFile Config)
         {
 
-                PresetLoadUtill.Config = Config;
+            PresetLoadUtill.Config = Config;
 
             try
             {
-                if (Config ==null)
+                if (Config == null)
                 {
-                    PresetLoadCtr.myLog.LogError("Config is null" );
+                    PresetLoadCtr.myLog.LogError("Config is null");
                 }
                 else
                 {
@@ -123,32 +106,36 @@ namespace COM3D25.PresetLoadCtr.Plugin
             }
             //isOpen = isOpen;
 
-                selGridPreset = Config.Bind("ConfigFile", "selGridPreset", (int)PresetLoadPatch.PresetType.none);
-                selGridList = Config.Bind("ConfigFile", "selGridList", (int)ListType.All);
-                selGridMod = Config.Bind("ConfigFile", "selGridMod", (int)ModType.AllMaid_RandomPreset);
-                // 일반 설정값
-                IsGUIOn = Config.Bind("GUI", "isGUIOn", false);
-                isAuto = Config.Bind("ConfigFile", "isAuto", false);
+            selGridPreset = Config.Bind("ConfigFile", "selGridPreset", (int)PresetLoadPatch.PresetType.none);
+            selGridList = Config.Bind("ConfigFile", "selGridList", (int)ListType.All);
+            selGridMod = Config.Bind("ConfigFile", "selGridMod", (int)ModType.AllMaid_RandomPreset);
+            // 일반 설정값
+            IsGUIOn = Config.Bind("GUI", "isGUIOn", false);
+            isAuto = Config.Bind("ConfigFile", "isAuto", false);
 
-                SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { isGUIOn = !isGUIOn; }), "PresetLoadCtr", MyUtill.ExtractResource(COM3D25.PresetLoadCtr.Plugin.Properties.Resources.icon));
+            Maid_SetProp_log = Config.Bind("Maid", "SetProp log", true);
 
+            namesMod = Enum.GetNames(typeof(ModType));
+            namesPreset = Enum.GetNames(typeof(PresetLoadPatch.PresetType));
+            namesList = Enum.GetNames(typeof(ListType));
 
-                namesMod = Enum.GetNames(typeof(ModType));
-                namesPreset = Enum.GetNames(typeof(PresetLoadPatch.PresetType));
-                namesList = Enum.GetNames(typeof(ListType));
+            // GameMain.Instance.SerializeStorageManager.StoreDirectoryPath 는 Awake에서 못씀
+            // 파일 열기창 설정 부분. 이런건 구글링 하기
+            openDialog = new System.Windows.Forms.OpenFileDialog()
+            {
+                // 기본 확장자
+                DefaultExt = "preset",
+                // 기본 디렉토리
+                InitialDirectory = Path.Combine(Environment.CurrentDirectory, "preset"),
+                // 선택 가능 확장자
+                Filter = "preset files (*.preset)|*.preset|All files (*.*)|*.*"
+            };
 
-                // GameMain.Instance.SerializeStorageManager.StoreDirectoryPath 는 Awake에서 못씀
-                // 파일 열기창 설정 부분. 이런건 구글링 하기
-                openDialog = new System.Windows.Forms.OpenFileDialog()
-                {
-                    // 기본 확장자
-                    DefaultExt = "preset",
-                    // 기본 디렉토리
-                    InitialDirectory = Path.Combine(Environment.CurrentDirectory, "preset"),
-                    // 선택 가능 확장자
-                    Filter = "preset files (*.preset)|*.preset|All files (*.*)|*.*"
-                };
+        }
 
+        public static void Start()
+        {
+            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { isGUIOn = !isGUIOn; }), "PresetLoadCtr", MyUtill.ExtractResource(COM3D25.PresetLoadCtr.Plugin.Properties.Resources.icon));
         }
 
         private static Vector2 scrollPosition;
@@ -187,6 +174,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("List load")) { LoadList(); }
+                if (GUILayout.Button("$Log {Maid_SetProp_log.Value}")) { Maid_SetProp_log.Value = !Maid_SetProp_log.Value;  }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
@@ -470,7 +458,14 @@ namespace COM3D25.PresetLoadCtr.Plugin
                 PresetLoadCtr.myLog.LogWarning("SetMaidPreset preset null ");
                 return;
             }
-            GameMain.Instance.CharacterMgr.PresetSet(m_maid, preset);
+            try
+            {
+                GameMain.Instance.CharacterMgr.PresetSet(m_maid, preset);
+            }
+            catch (Exception e)
+            {
+                PresetLoadCtr.myLog.LogError($"{e}");
+            }
             if (Product.isPublic)
                 SceneEdit.AllProcPropSeqStart(m_maid);
         }

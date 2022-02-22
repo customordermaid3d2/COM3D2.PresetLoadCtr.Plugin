@@ -74,6 +74,12 @@ namespace COM3D25.PresetLoadCtr.Plugin
             PresetLoadUtill.myWindowRect.load();
         }
 
+        public void Start()
+        {
+            PresetLoadUtill.Start();
+        }
+
+
 
         public void OnDisable()
         {

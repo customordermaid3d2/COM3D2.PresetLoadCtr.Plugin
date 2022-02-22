@@ -16,6 +16,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
         public static PresetType presetType = PresetType.none;
 
         private static bool isNewMaid = false;
+        internal static bool loaded = false;
 
         public enum PresetType
         {
@@ -51,6 +52,34 @@ namespace COM3D25.PresetLoadCtr.Plugin
                     break;
             }
         }
+
+        [HarmonyPatch(typeof(Maid), "SetProp", typeof(MaidProp), typeof(string), typeof(int), typeof(bool), typeof(bool))]
+        [HarmonyPrefix]
+        public static void SetProp(MaidProp mp, string filename, int f_nFileNameRID, bool f_bTemp, bool f_bNoScale = false)
+        {
+            if (PresetLoadUtill.Maid_SetProp_log.Value && loaded)
+            {
+                PresetLoadCtr.myLog.LogMessage($"SetProp {mp.name} , {mp.strFileName} , {filename}");
+            }
+        }
+
+        /// <summary>
+        /// 세이브 파일 로딩 시작
+        /// </summary>
+        [HarmonyPatch(typeof(GameMain), "Deserialize", new Type[] { typeof(int), typeof(bool) })]
+        [HarmonyPrefix]
+        public static void Deserialize1()//GameMain __instance, ref bool __result, int f_nSaveNo, bool scriptExec = true)
+        {
+            loaded = false;
+        }
+
+        [HarmonyPatch(typeof(GameMain), "Deserialize", new Type[] { typeof(int), typeof(bool) })]
+        [HarmonyPostfix]
+        public static void Deserialize2()//GameMain __instance, ref bool __result, int f_nSaveNo, bool scriptExec = true)
+        {
+             loaded = true;
+        }
+
         /*
         public static Maid[] m_gcActiveMaid;
 
@@ -63,31 +92,31 @@ namespace COM3D25.PresetLoadCtr.Plugin
         }
         */
 
-       // public static string[] namesMaid = new string[18];
-       /*
-        [HarmonyPatch(typeof(CharacterMgr), "SetActive")]
-        [HarmonyPostfix]
-        public static void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
-        {
-            //if (configEntryUtill["SetActive", false])
-            //    MyLog.LogMessage("CharacterMgr.SetActive", f_nActiveSlotNo, MyUtill.GetMaidFullName(f_maid));
-            if (!f_bMan)
-                namesMaid[f_nActiveSlotNo] = f_maid.status.fullNameEnStyle;
-                //namesMaid[f_nActiveSlotNo] = MyUtill.GetMaidFullName(f_maid);
-        }
+        // public static string[] namesMaid = new string[18];
+        /*
+         [HarmonyPatch(typeof(CharacterMgr), "SetActive")]
+         [HarmonyPostfix]
+         public static void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
+         {
+             //if (configEntryUtill["SetActive", false])
+             //    MyLog.LogMessage("CharacterMgr.SetActive", f_nActiveSlotNo, MyUtill.GetMaidFullName(f_maid));
+             if (!f_bMan)
+                 namesMaid[f_nActiveSlotNo] = f_maid.status.fullNameEnStyle;
+                 //namesMaid[f_nActiveSlotNo] = MyUtill.GetMaidFullName(f_maid);
+         }
 
-        // private void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
-        [HarmonyPatch(typeof(CharacterMgr), "Deactivate")]
-        [HarmonyPrefix]
-        public static void Deactivate(int f_nActiveSlotNo, bool f_bMan)
-        {
-            //if (configEntryUtill["Deactivate", false])
-            //    MyLog.LogMessage("CharacterMgr.Deactivate", f_nActiveSlotNo);// HarmonyPrefix로 했는데도 m_gcActiveMaid 에선 제거되있네
-            if (!f_bMan)
-                namesMaid[f_nActiveSlotNo] = string.Empty;
+         // private void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
+         [HarmonyPatch(typeof(CharacterMgr), "Deactivate")]
+         [HarmonyPrefix]
+         public static void Deactivate(int f_nActiveSlotNo, bool f_bMan)
+         {
+             //if (configEntryUtill["Deactivate", false])
+             //    MyLog.LogMessage("CharacterMgr.Deactivate", f_nActiveSlotNo);// HarmonyPrefix로 했는데도 m_gcActiveMaid 에선 제거되있네
+             if (!f_bMan)
+                 namesMaid[f_nActiveSlotNo] = string.Empty;
 
-        }
-        */
+         }
+         */
         /// <summary>
         /// 고용 ok 누를시
         /// </summary>
