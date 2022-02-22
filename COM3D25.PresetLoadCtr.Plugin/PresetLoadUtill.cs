@@ -174,7 +174,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
                 GUILayout.BeginHorizontal();
                 if (GUILayout.Button("List load")) { LoadList(); }
-                if (GUILayout.Button("$Log {Maid_SetProp_log.Value}")) { Maid_SetProp_log.Value = !Maid_SetProp_log.Value;  }
+                if (GUILayout.Button($"Log {Maid_SetProp_log.Value}")) { Maid_SetProp_log.Value = !Maid_SetProp_log.Value;  }
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
