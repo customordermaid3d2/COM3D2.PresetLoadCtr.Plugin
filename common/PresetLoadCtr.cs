@@ -1,6 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using COM3D25.LillyUtill;
+using COM3D2.LillyUtill;
 using COM3D2API;
 using HarmonyLib;
 using System;

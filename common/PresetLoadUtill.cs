@@ -1,5 +1,5 @@
 ﻿using BepInEx.Configuration;
-using COM3D25.LillyUtill;
+using COM3D2.LillyUtill;
 using COM3D2API;
 using System;
 using System.Collections.Generic;
@@ -135,7 +135,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
         public static void Start()
         {
-            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { isGUIOn = !isGUIOn; }), "PresetLoadCtr", MyUtill.ExtractResource(COM3D25.PresetLoadCtr.Plugin.Properties.Resources.icon));
+            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { isGUIOn = !isGUIOn; }), "PresetLoadCtr", MyUtill.ExtractResource(COM3D2.PresetLoadCtr.Plugin.Properties.Resources.icon));
         }
 
         private static Vector2 scrollPosition;
