@@ -1,5 +1,6 @@
-﻿using COM3D2.LillyUtill;
+﻿//using COM3D2.LillyUtill;
 using HarmonyLib;
+using MaidStatus;
 using scoutmode;
 using System;
 using System.Collections.Generic;
@@ -33,10 +34,6 @@ namespace COM3D25.PresetLoadCtr.Plugin
         [HarmonyPrefix]
         public static void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest)
         {
-            PresetLoadCtr.myLog.Log("PresetSet.Prefix"
-            , f_maid.status.fullNameEnStyle
-            , f_prest.strFileName
-            );
             switch (presetType)
             {
                 case PresetType.Wear:
@@ -59,7 +56,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
         {
             if (PresetLoadUtill.Maid_SetProp_log.Value && loaded)
             {
-                PresetLoadCtr.myLog.LogMessage($"SetProp {mp.name} , {mp.strFileName} , {filename}");
+                PresetLoadCtr.Log.LogMessage($"SetProp {mp.name} , {mp.strFileName} , {filename}");
             }
         }
 
@@ -123,7 +120,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
         [HarmonyPostfix, HarmonyPatch(typeof(MaidManagementMain), "Employment")]
         public static void Employment(string ___new_edit_label_)
         {
-            PresetLoadCtr.myLog.LogMessage("MaidManagementMain.Employment", PresetLoadUtill.IsAuto);
+            PresetLoadCtr.Log.LogMessage($"MaidManagementMain.Employment { PresetLoadUtill.IsAuto}");
             isNewMaid = true;
         }
 
@@ -131,7 +128,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
         [HarmonyPostfix, HarmonyPatch(typeof(ScoutMainScreenManager), "AddScoutMaid")]
         public static void AddScoutMaid(ScoutMainScreenManager __instance)
         {
-            PresetLoadCtr.myLog.LogMessage("ScoutMainScreenManager.AddScoutMaid", PresetLoadUtill.IsAuto);
+            PresetLoadCtr.Log.LogMessage($"ScoutMainScreenManager.AddScoutMaid {PresetLoadUtill.IsAuto}" );
             isNewMaid = true;
         }
 
@@ -140,7 +137,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
         [HarmonyPostfix]
         public static void OnCompleteFadeIn() // Maid ___m_maid,SceneEdit __instance
         {
-            PresetLoadCtr.myLog.LogMessage("SceneEdit.OnCompleteFadeIn", PresetLoadUtill.IsAuto);
+            PresetLoadCtr.Log.LogMessage($"SceneEdit.OnCompleteFadeIn {PresetLoadUtill.IsAuto}");
             if (PresetLoadUtill.IsAuto)
             {
                 newMaidSetting();
@@ -166,9 +163,25 @@ namespace COM3D25.PresetLoadCtr.Plugin
                 return;
             }
             Maid maid = GameMain.Instance.CharacterMgr.GetMaid(0);
-            PersonalUtill.SetPersonalRandom(maid);
+            SetPersonalRandom(maid);
             PresetLoadUtill.RandPreset(maid);
             isNewMaid = false;
+        }
+
+        public static int SetPersonalRandom(Maid maid)
+        {
+            if (maid == null)
+            {
+                PresetLoadCtr.Log.LogFatal("maid null");
+            }
+            var p=Personal.GetAllDatas(true);
+
+            int a = UnityEngine.Random.Range(0, p.Count);
+            Personal.Data data = p[a];
+            maid.status.SetPersonal(data);
+            maid.status.firstName = data.uniqueName;
+
+            return a;
         }
 
     }

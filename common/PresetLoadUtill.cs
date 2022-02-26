@@ -1,8 +1,12 @@
 ﻿using BepInEx.Configuration;
-using COM3D2.LillyUtill;
+using COM3D2.MaidActiveUtill;
+using COM3D2.WindowRectUtill;
+//using COM3D2.LillyUtill;
 using COM3D2API;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -46,7 +50,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
         //public static PresetType presetType = PresetType.none;
 
         // private Rect windowRect = new Rect(windowSpace, windowSpace, 300f, 600f);
-        public static MyWindowRect myWindowRect;
+        public static WindowRectUtill myWindowRect;
         private static int windowId = new System.Random().Next();
 
         public static string windowName = MyAttribute.PLAGIN_NAME;
@@ -92,17 +96,17 @@ namespace COM3D25.PresetLoadCtr.Plugin
             {
                 if (Config == null)
                 {
-                    PresetLoadCtr.myLog.LogError("Config is null");
+                    PresetLoadCtr.Log.LogError("Config is null");
                 }
                 else
                 {
-                    PresetLoadCtr.myLog.LogMessage("Config is not null");
+                    PresetLoadCtr.Log.LogMessage("Config is not null");
                 }
-                myWindowRect = new MyWindowRect(Config, "COM3D2.PresetLoadCtr.Plugin", "PresetLoadCtr", "PLCtr");
+                myWindowRect = new WindowRectUtill(Config, "COM3D2.PresetLoadCtr.Plugin", "PresetLoadCtr", "PLCtr");
             }
             catch (Exception e)
             {
-                PresetLoadCtr.myLog.LogError("MyWindowRect : " + e.ToString());
+                PresetLoadCtr.Log.LogError("MyWindowRect : " + e.ToString());
             }
             //isOpen = isOpen;
 
@@ -135,7 +139,16 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
         public static void Start()
         {
-            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { isGUIOn = !isGUIOn; }), "PresetLoadCtr", MyUtill.ExtractResource(COM3D2.PresetLoadCtr.Plugin.Properties.Resources.icon));
+            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { isGUIOn = !isGUIOn; }), "PresetLoadCtr", ExtractResource(COM3D2.PresetLoadCtr.Plugin.Properties.Resources.icon));
+        }
+
+        public static byte[] ExtractResource(Bitmap image)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                image.Save(ms, ImageFormat.Png);
+                return ms.ToArray();
+            }
         }
 
         private static Vector2 scrollPosition;
@@ -207,7 +220,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
                     //GUI.enabled = modType == ModType.OneMaid;
                     //selGridmaid = GUILayout.SelectionGrid(selGridmaid, MaidActivePatch.maidNames, 1, GUILayout.Width(260));
 
-                    selGridmaid = MaidActivePatch.SelectionGrid3(selGridmaid, 3, 265, false);
+                    selGridmaid = MaidActiveUtill.SelectionGrid(selGridmaid);
                 }
 
                 GUILayout.EndScrollView();
@@ -226,7 +239,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             {
                 case ModType.OneMaid:
                     {
-                        var maid = MaidActivePatch.GetMaid(selGridmaid);
+                        var maid = MaidActiveUtill.GetMaid(selGridmaid);
                         if (maid == null) return;
 
                         CharacterMgr.Preset preset = presetGet();
@@ -242,7 +255,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
                         CharacterMgr.Preset preset = presetGet();
                         if (preset == null) return;
 
-                        foreach (var maid in MaidActivePatch.GetMaidAll())
+                        foreach (var maid in MaidActiveUtill.GetMaidAll())
                         {
                             if (maid == null)
                             {
@@ -298,7 +311,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
         private static void presetSave()
         {
-            var maid = MaidActivePatch.GetMaid(selGridmaid);
+            var maid = MaidActiveUtill.GetMaid(selGridmaid);
             if (maid == null)
             {
                 return;
@@ -331,7 +344,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
             if (list.Count == 0)
             {
-                PresetLoadCtr.myLog.LogWarning("RandPreset No list");
+                PresetLoadCtr.Log.LogWarning("RandPreset No list");
                 return;
             }
 
@@ -340,7 +353,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             switch ((ModType)SelGridMod)
             {
                 case ModType.OneMaid:
-                    m_maid = MaidActivePatch.GetMaid(selGridmaid);
+                    m_maid = MaidActiveUtill.GetMaid(selGridmaid);
                     if (m_maid == null)
                     {
                         break;
@@ -350,7 +363,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
                     break;
                 case ModType.AllMaid_OnePreset:
                     file = list[rand.Next(list.Count)];
-                    foreach (var item in MaidActivePatch.GetMaidAll())
+                    foreach (var item in MaidActiveUtill.GetMaidAll())
                     {
                         if (item == null)
                         {
@@ -360,7 +373,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
                     }
                     break;
                 case ModType.AllMaid_RandomPreset:
-                    foreach (var item in MaidActivePatch.GetMaidAll())
+                    foreach (var item in MaidActiveUtill.GetMaidAll())
                     {
                         if (item == null)
                         {
@@ -415,14 +428,14 @@ namespace COM3D25.PresetLoadCtr.Plugin
                     return;
                 }
             }
-            PresetLoadCtr.myLog.LogMessage("RandPreset", m_maid.status.fullNameEnStyle);
+            PresetLoadCtr.Log.LogMessage($"RandPreset {m_maid.status.fullNameEnStyle}");
 
             List<string> list = lists;
             list = GetList(listType, list);
 
             if (list.Count == 0)
             {
-                PresetLoadCtr.myLog.LogWarning("RandPreset No list");
+                PresetLoadCtr.Log.LogWarning("RandPreset No list");
                 return;
             }
 
@@ -455,7 +468,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             if (preset == null)
             {
                 //  if (configEntryUtill["SetMaidPreset", false])
-                PresetLoadCtr.myLog.LogWarning("SetMaidPreset preset null ");
+                PresetLoadCtr.Log.LogWarning("SetMaidPreset preset null ");
                 return;
             }
             try
@@ -464,7 +477,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             }
             catch (Exception e)
             {
-                PresetLoadCtr.myLog.LogError($"{e}");
+                PresetLoadCtr.Log.LogError($"{e}");
             }
             if (Product.isPublic)
                 SceneEdit.AllProcPropSeqStart(m_maid);

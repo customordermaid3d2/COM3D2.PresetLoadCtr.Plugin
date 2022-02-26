@@ -1,6 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
-using COM3D2.LillyUtill;
+using BepInEx.Logging;
 using COM3D2API;
 using HarmonyLib;
 using System;
@@ -26,15 +26,17 @@ namespace COM3D25.PresetLoadCtr.Plugin
         // 단축키 설정파일로 연동
         private ConfigEntry<BepInEx.Configuration.KeyboardShortcut> ShowCounter;
 
-        public static MyLog myLog;//= new MyLog(MyAttribute.PLAGIN_NAME);
+      //  public static MyLog myLog;//= new MyLog(MyAttribute.PLAGIN_NAME);
 
         Harmony harmony;
+        public static ManualLogSource Log;
 
         public void Awake()
         {
-            myLog = new MyLog(Logger,Config);
+            //   myLog = new MyLog(Logger,Config);
+            Log = Logger;
             //MyLog.log = Logger;// BepInEx.Logging.Logger.CreateLogSource("PresetLoadCtr");
-            PresetLoadCtr.myLog.LogMessage("Awake https://github.com/customordermaid3d2/COM3D2.PresetLoadCtr.Plugin");
+            PresetLoadCtr.Log.LogMessage("Awake https://github.com/customordermaid3d2/COM3D2.PresetLoadCtr.Plugin");
 
             /*
             var overversion = new Version(1,56);
@@ -65,13 +67,12 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
         public void OnEnable()
         {
-            PresetLoadCtr.myLog.LogMessage("OnEnable");
+            PresetLoadCtr.Log.LogMessage("OnEnable");
 
             //SceneManager.sceneLoaded += this.OnSceneLoaded;
 
             // 하모니 패치
-            harmony = Harmony.CreateAndPatchAll(typeof(PresetLoadPatch));
-            PresetLoadUtill.myWindowRect.load();
+            harmony = Harmony.CreateAndPatchAll(typeof(PresetLoadPatch));            
         }
 
         public void Start()
@@ -116,8 +117,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             //}
             if (ShowCounter.Value.IsUp())
             {
-                PresetLoadUtill.isGUIOn = !PresetLoadUtill.isGUIOn;
-                PresetLoadCtr.myLog.LogMessage("IsUp", ShowCounter.Value.Modifiers, ShowCounter.Value.MainKey);
+                PresetLoadUtill.isGUIOn = !PresetLoadUtill.isGUIOn;                
             }
         }
 
