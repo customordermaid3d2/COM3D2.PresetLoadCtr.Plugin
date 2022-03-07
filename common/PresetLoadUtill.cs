@@ -1,15 +1,14 @@
 ﻿using BepInEx.Configuration;
-using COM3D2.MaidActiveUtill;
-using COM3D2.WindowRectUtill;
+
 //using COM3D2.LillyUtill;
 using COM3D2API;
+using LillyUtill.MyMaidActive;
+using LillyUtill.MyWindowRect;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -216,9 +215,6 @@ namespace COM3D25.PresetLoadCtr.Plugin
                 SelGridMod = GUILayout.SelectionGrid(SelGridMod, namesMod, 1);
                 if ((ModType)SelGridMod == ModType.OneMaid)
                 {
-                    //GUILayout.Label("Maid List " + selGridmaid);
-                    //GUI.enabled = modType == ModType.OneMaid;
-                    //selGridmaid = GUILayout.SelectionGrid(selGridmaid, MaidActivePatch.maidNames, 1, GUILayout.Width(260));
 
                     selGridmaid = MaidActiveUtill.SelectionGrid(selGridmaid);
                 }
@@ -446,28 +442,15 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
         private static void SetMaidPreset(Maid m_maid, string file)
         {
-            if (m_maid == null)
+            if (m_maid == null || m_maid.IsBusy)
             {
-                //MyLog.LogWarning("SetMaidPreset maid null");
                 return;
             }
-            if (m_maid.IsBusy)
-            {
-                //       MyLog.LogDebug("RandPreset Maid Is Busy");
-                return;
-            }
-
-            //if (configEntryUtill["SetMaidPreset", false])
-            //    MyLog.LogDebug("SetMaidPreset select :" + file);
 
             CharacterMgr.Preset preset = GameMain.Instance.CharacterMgr.PresetLoad(file);
 
-            //Main.CustomPresetDirectory = Path.GetDirectoryName(file);
-            //UnityEngine.Debug.Log("RandPreset preset path "+ GameMain.Instance.CharacterMgr.PresetDirectory);
-            //preset.strFileName = file;
             if (preset == null)
             {
-                //  if (configEntryUtill["SetMaidPreset", false])
                 PresetLoadCtr.Log.LogWarning("SetMaidPreset preset null ");
                 return;
             }

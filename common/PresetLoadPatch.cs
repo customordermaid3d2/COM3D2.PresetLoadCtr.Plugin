@@ -27,8 +27,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             All
         }
 
-        // public void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest, bool forceBody = false) // 157
-        // public void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest) // 155
+
         // 테스팅 완료
         [HarmonyPatch(typeof(CharacterMgr), "PresetSet", new Type[] { typeof(Maid), typeof(CharacterMgr.Preset), typeof(bool) })]
         [HarmonyPrefix]
@@ -50,13 +49,24 @@ namespace COM3D25.PresetLoadCtr.Plugin
             }
         }
 
+        // public Preset PresetLoad(string f_strFileName)
+        [HarmonyPatch(typeof(CharacterMgr), "PresetLoad", typeof(string))]
+        [HarmonyPrefix]
+        public static void PresetLoad(string f_strFileName)
+        {
+            if (PresetLoadUtill.Maid_SetProp_log.Value && loaded)
+            {
+                PresetLoadCtr.Log.LogMessage($"PresetLoad , {f_strFileName}");
+            }
+        }
+
         [HarmonyPatch(typeof(Maid), "SetProp", typeof(MaidProp), typeof(string), typeof(int), typeof(bool), typeof(bool))]
         [HarmonyPrefix]
         public static void SetProp(MaidProp mp, string filename, int f_nFileNameRID, bool f_bTemp, bool f_bNoScale = false)
         {
             if (PresetLoadUtill.Maid_SetProp_log.Value && loaded)
             {
-                PresetLoadCtr.Log.LogMessage($"SetProp {mp.name} , {mp.strFileName} , {filename}");
+                PresetLoadCtr.Log.LogMessage($"SetProp , {mp.name} , {mp.strFileName} , {filename}");
             }
         }
 
@@ -77,43 +87,6 @@ namespace COM3D25.PresetLoadCtr.Plugin
              loaded = true;
         }
 
-        /*
-        public static Maid[] m_gcActiveMaid;
-
-        [HarmonyPatch(typeof(CharacterMgr), MethodType.Constructor)]
-        [HarmonyPostfix]
-        public static void CharacterMgrConstructor(Maid[] ___m_gcActiveMaid)
-        {
-            m_gcActiveMaid = ___m_gcActiveMaid;
-            PresetLoadCtr.myLog.LogMessage("CharacterMgr.Constructor ");
-        }
-        */
-
-        // public static string[] namesMaid = new string[18];
-        /*
-         [HarmonyPatch(typeof(CharacterMgr), "SetActive")]
-         [HarmonyPostfix]
-         public static void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
-         {
-             //if (configEntryUtill["SetActive", false])
-             //    MyLog.LogMessage("CharacterMgr.SetActive", f_nActiveSlotNo, MyUtill.GetMaidFullName(f_maid));
-             if (!f_bMan)
-                 namesMaid[f_nActiveSlotNo] = f_maid.status.fullNameEnStyle;
-                 //namesMaid[f_nActiveSlotNo] = MyUtill.GetMaidFullName(f_maid);
-         }
-
-         // private void SetActive(Maid f_maid, int f_nActiveSlotNo, bool f_bMan)
-         [HarmonyPatch(typeof(CharacterMgr), "Deactivate")]
-         [HarmonyPrefix]
-         public static void Deactivate(int f_nActiveSlotNo, bool f_bMan)
-         {
-             //if (configEntryUtill["Deactivate", false])
-             //    MyLog.LogMessage("CharacterMgr.Deactivate", f_nActiveSlotNo);// HarmonyPrefix로 했는데도 m_gcActiveMaid 에선 제거되있네
-             if (!f_bMan)
-                 namesMaid[f_nActiveSlotNo] = string.Empty;
-
-         }
-         */
         /// <summary>
         /// 고용 ok 누를시
         /// </summary>
@@ -144,16 +117,6 @@ namespace COM3D25.PresetLoadCtr.Plugin
             }
         }
 
-        /// <summary>
-        /// public Maid AddStockMaid()
-        /// 로딩시에도 불러와서 이방법 위험
-        /// </summary>
-        // [HarmonyPatch(typeof(CharacterMgr), "AddStockMaid")]
-        // [HarmonyPostfix]
-        // public static void AddStockMaid(Maid __result) // Maid ___m_maid,SceneEdit __instance
-        // {
-        //     PresetUtill.SetMaidRandPreset(__result);            /// 로딩시에도 불러와서 이방법 위험
-        // }
 
 
         public static void newMaidSetting()
