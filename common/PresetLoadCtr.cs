@@ -34,7 +34,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             ShowCounter = Config.Bind("KeyboardShortcut", "OnOff", new BepInEx.Configuration.KeyboardShortcut(KeyCode.Alpha8, KeyCode.LeftControl));
 
 
-            PresetLoadUtill.init(Config);
+            PresetLoadUtill.init(Config, Log);
             PresetLoadUtill.LoadList();
         }
 

@@ -86,7 +86,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
         public static System.Windows.Forms.OpenFileDialog openDialog;
         static bool isShowDialogLoadRun = false;
 
-        public static void init(ConfigFile Config)
+        public static void init(ConfigFile Config, BepInEx.Logging.ManualLogSource log)
         {
 
             PresetLoadUtill.Config = Config;
@@ -101,7 +101,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
                 {
                     PresetLoadCtr.Log.LogMessage("Config is not null");
                 }
-                myWindowRect = new WindowRectUtill(Config, "COM3D2.PresetLoadCtr.Plugin", "PresetLoadCtr", "PLCtr");
+                myWindowRect = new WindowRectUtill(Config, log, "PresetLoadCtr", "PLCtr");
             }
             catch (Exception e)
             {
