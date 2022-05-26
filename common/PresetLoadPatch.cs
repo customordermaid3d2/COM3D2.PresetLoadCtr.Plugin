@@ -29,9 +29,13 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
 
         // 테스팅 완료
-        [HarmonyPatch(typeof(CharacterMgr), "PresetSet", new Type[] { typeof(Maid), typeof(CharacterMgr.Preset), typeof(bool) })]
+#if COM3D2
+        [HarmonyPatch(typeof(CharacterMgr), "PresetSet", new Type[] { typeof(Maid), typeof(CharacterMgr.Preset) })] // 2.0
+#elif COM3D25
+        [HarmonyPatch(typeof(CharacterMgr), "PresetSet", new Type[] { typeof(Maid), typeof(CharacterMgr.Preset), typeof(bool) })] // 2.5
+#endif
         [HarmonyPrefix]
-        public static void PresetSet(Maid f_maid, CharacterMgr.Preset f_prest)
+        public static void PresetSet( CharacterMgr.Preset f_prest)//Maid f_maid,
         {
             switch (presetType)
             {
