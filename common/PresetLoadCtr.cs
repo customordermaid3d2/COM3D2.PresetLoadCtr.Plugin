@@ -73,6 +73,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             Log.LogMessage("UniverseInit st");
 
             myUIBase = UniversalUI.RegisterUI(MyAttribute.PLAGIN_NAME, UiUpdate);
+            
             myUIBase.Enabled = true;
             
             myPanel = new PresetLoadCtrPanel(myUIBase, Config, Log);
@@ -114,10 +115,13 @@ namespace COM3D25.PresetLoadCtr.Plugin
         public void Start()
         {
             //PresetLoadUtill.Start();
-            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { myUIBase.Enabled=!myUIBase.Enabled; }), "PresetLoadCtr", COM3D2.PresetLoadCtr.Plugin.Properties.Resources.icon);
+            SystemShortcutAPI.AddButton("PresetLoadCtr", OnOff, "PresetLoadCtr", COM3D2.PresetLoadCtr.Plugin.Properties.Resources.icon);
         }
 
-
+        private static void OnOff()
+        {
+            myUIBase.Enabled = true; myPanel.Enabled = true;
+        }
 
         public void OnDisable()
         {
@@ -143,7 +147,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
             if (ShowCounter.Value.IsUp())
             {
-                myUIBase.Enabled = true;
+                OnOff();
             }
         }
 
