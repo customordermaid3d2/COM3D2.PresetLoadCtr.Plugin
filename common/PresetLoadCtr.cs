@@ -5,6 +5,7 @@ using COM3D2API;
 using HarmonyLib;
 using System;
 using UnityEngine;
+using UniverseLib.Config;
 using UniverseLib.UI;
 
 namespace COM3D25.PresetLoadCtr.Plugin
@@ -57,17 +58,27 @@ namespace COM3D25.PresetLoadCtr.Plugin
             PresetLoadUtill.init(Config, Log);
             PresetLoadUtill.LoadList();
 
-            UniverseLib.Universe.Init(UniverseInit, LogHandler);
+            UniverseLibConfig universeLibConfig = new UniverseLibConfig
+            {
+                Force_Unlock_Mouse = new bool?(false),
+                Disable_EventSystem_Override = new bool?(true),
+                Allow_UI_Selection_Outside_UIBase = new bool?(true)
+            };
+            UniverseLib.Universe.Init(0, UniverseInit, LogHandler, universeLibConfig);
             //UniverseInit();
         }
 
         private void UniverseInit()
         {
-            myUIBase = UniversalUI.RegisterUI("PresetLoadCtrPanel", UiUpdate);
+            Log.LogMessage("UniverseInit st");
+
+            myUIBase = UniversalUI.RegisterUI(MyAttribute.PLAGIN_NAME, UiUpdate);
             myUIBase.Enabled = true;
             
             myPanel = new PresetLoadCtrPanel(myUIBase, Config, Log);
             myPanel.Enabled = true;
+
+            Log.LogMessage("UniverseInit ed");
         }
 
         private static void LogHandler(string log, LogType logType)

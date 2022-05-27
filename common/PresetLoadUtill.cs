@@ -48,17 +48,6 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
         //public static PresetType presetType = PresetType.none;
 
-        // private Rect windowRect = new Rect(windowSpace, windowSpace, 300f, 600f);
-        public static WindowRectUtill myWindowRect;
-        private static int windowId = new System.Random().Next();
-
-        public static string windowName = MyAttribute.PLAGIN_NAME;
-        public static string FullName = MyAttribute.PLAGIN_NAME;
-        public static string ShortName = "SP";
-
-
-
-        //public static MyLog myLog;
        
         public enum ListType
         {
@@ -93,26 +82,17 @@ namespace COM3D25.PresetLoadCtr.Plugin
                 {
                     log.LogMessage("Config is not null");
                 }
-                myWindowRect = new WindowRectUtill(Config, log, "PresetLoadCtr", "PLCtr");
+                //myWindowRect = new WindowRectUtill(Config, log, "PresetLoadCtr", "PLCtr");
             }
             catch (Exception e)
             {
                 PresetLoadCtr.Log.LogError("MyWindowRect : " + e.ToString());
             }
-            //isOpen = isOpen;
 
-            //selGridPreset = Config.Bind("ConfigFile", "selGridPreset", (int)PresetLoadPatch.PresetType.none);
-            //selGridList = Config.Bind("ConfigFile", "selGridList", (int)ListType.All);
-            //selGridMod = Config.Bind("ConfigFile", "selGridMod", (int)ModType.AllMaid_RandomPreset);
-            // 일반 설정값
-            //IsGUIOn = Config.Bind("GUI", "isGUIOn", false);
             isAuto = Config.Bind("ConfigFile", "isAuto", false);
             
             Maid_SetProp_log = Config.Bind("Maid", "SetProp log", true);
-            
-            //namesMod = Enum.GetNames(typeof(ModType));
-            //namesPreset = Enum.GetNames(typeof(PresetLoadPatch.PresetType));
-            //namesList = Enum.GetNames(typeof(ListType));
+
 
             // GameMain.Instance.SerializeStorageManager.StoreDirectoryPath 는 Awake에서 못씀
             // 파일 열기창 설정 부분. 이런건 구글링 하기
@@ -127,94 +107,6 @@ namespace COM3D25.PresetLoadCtr.Plugin
             };
 
         }
-
-        public static byte[] ExtractResource(Bitmap image)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                image.Save(ms, ImageFormat.Png);
-                return ms.ToArray();
-            }
-        }
-
-        /*
-        private static Vector2 scrollPosition;
-        public static void OnGUI()
-        {
-            if (!isGUIOn)
-            {
-                return;
-            }
-            // 윈도우 리사이즈시 밖으로 나가버리는거 방지
-            myWindowRect.WindowRect = GUILayout.Window(windowId, myWindowRect.WindowRect, PresetLoadUtill.WindowFunction, "", GUI.skin.box);
-        }
-
-        public static void WindowFunction(int id)
-        {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(myWindowRect.windowName, GUILayout.Height(20));
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button("-", GUILayout.Width(20), GUILayout.Height(20))) { myWindowRect.IsOpen = !myWindowRect.IsOpen; }
-            if (GUILayout.Button("x", GUILayout.Width(20), GUILayout.Height(20))) { isGUIOn = false; }
-            GUILayout.EndHorizontal();
-
-            if (!myWindowRect.IsOpen)
-            {
-
-            }
-            else
-            {
-                scrollPosition = GUILayout.BeginScrollView(scrollPosition, false, true);
-
-                GUILayout.Label("Wear Preset file : " + listWear.Count);
-                GUILayout.Label("Body Preset file : " + listBody.Count);
-                GUILayout.Label("Wear/Body Preset file : " + listAll.Count);
-                GUILayout.Label("All  Preset file : " + lists.Count);
-
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("List load")) { LoadList(); }
-                if (GUILayout.Button($"Log {Maid_SetProp_log.Value}")) { Maid_SetProp_log.Value = !Maid_SetProp_log.Value;  }
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("preset load")) { presetLoad(); };
-                if (GUILayout.Button("preset save")) { presetSave(); };
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("Random Run")) { RandPresetRun(); }
-                if (GUILayout.Button("Random Auto " + IsAuto)) { IsAuto = !IsAuto; }
-                GUILayout.EndHorizontal();
-
-
-                GUILayout.Label("PresetType " + SelGridPreset);
-                SelGridPreset = GUILayout.Toolbar(SelGridPreset, namesPreset);
-
-                if (GUI.changed)
-                {
-                    PresetLoadPatch.presetType = (PresetLoadPatch.PresetType)SelGridPreset;
-                    GUI.changed = false;
-                }
-
-                GUILayout.Label("ListType " + SelGridList);
-                SelGridList = GUILayout.SelectionGrid(SelGridList, namesList, 2);
-                GUILayout.Label("ModType " + SelGridMod);
-                SelGridMod = GUILayout.SelectionGrid(SelGridMod, namesMod, 1);
-                if ((ModType)SelGridMod == ModType.OneMaid)
-                {
-
-                    selGridmaid = MaidActiveUtill.SelectionGrid(selGridmaid);
-                }
-
-                GUILayout.EndScrollView();
-
-
-            }
-
-            GUI.enabled = true;
-            GUI.DragWindow(); // 창 드레그 가능하게 해줌. 마지막에만 넣어야함
-        }
-        */
 
         internal static void presetLoad(int SelGridMod)
         {
