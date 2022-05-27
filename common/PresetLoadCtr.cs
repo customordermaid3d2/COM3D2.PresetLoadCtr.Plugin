@@ -1,8 +1,11 @@
 ﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using COM3D2API;
 using HarmonyLib;
+using System;
 using UnityEngine;
+using UniverseLib.UI;
 
 namespace COM3D25.PresetLoadCtr.Plugin
 {
@@ -17,27 +20,78 @@ namespace COM3D25.PresetLoadCtr.Plugin
     //[BepInProcess("COM3D2x64.exe")]
     public class PresetLoadCtr : BaseUnityPlugin
     {
+        #region
         // 단축키 설정파일로 연동
         private ConfigEntry<BepInEx.Configuration.KeyboardShortcut> ShowCounter;
-
 
         Harmony harmony;
         public static ManualLogSource Log;
 
+        public static UIBase myUIBase { get; private set; }
+        public static PresetLoadCtrPanel myPanel { get; private set; }
+
+
+        // GUI ON OFF 설정파일로 저장
+        private static ConfigEntry<bool> IsGUIOn;
+
+        public static bool isGUIOn
+        {
+            get => IsGUIOn.Value;
+            set => IsGUIOn.Value = value;
+        }
+
+        #endregion
         public void Awake()
         {
             Log = Logger;
             PresetLoadCtr.Log.LogMessage("Awake https://github.com/customordermaid3d2/COM3D2.PresetLoadCtr.Plugin");
 
-            
+
             // 단축키 기본값 설정
             ShowCounter = Config.Bind("KeyboardShortcut", "OnOff", new BepInEx.Configuration.KeyboardShortcut(KeyCode.Alpha8, KeyCode.LeftControl));
 
+            // 일반 설정값
+            IsGUIOn = Config.Bind("GUI", "isGUIOn", false);
+            IsGUIOn.SettingChanged += IsGUIOn_SettingChanged;
 
             PresetLoadUtill.init(Config, Log);
             PresetLoadUtill.LoadList();
+
+            UniverseLib.Universe.Init(UniverseInit, LogHandler);
+            //UniverseInit();
         }
 
+        private void UniverseInit()
+        {
+            myUIBase = UniversalUI.RegisterUI("PresetLoadCtrPanel", UiUpdate);
+            myUIBase.Enabled = true;
+            
+            myPanel = new PresetLoadCtrPanel(myUIBase, Config, Log);
+            myPanel.Enabled = true;
+        }
+
+        private static void LogHandler(string log, LogType logType)
+        {
+            switch (logType)
+            {
+                case LogType.Error:
+                case LogType.Exception:
+                    Log.LogError(log);
+                    break;
+                case LogType.Assert:
+                case LogType.Warning:
+                    Log.LogWarning(log);
+                    break;
+                case LogType.Log:
+                    Log.LogMessage(log);
+                    break;
+            }
+        }
+
+        private void IsGUIOn_SettingChanged(object sender, EventArgs e)
+        {            
+            myUIBase.Enabled = IsGUIOn.Value;
+        }
 
         public void OnEnable()
         {
@@ -48,7 +102,8 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
         public void Start()
         {
-            PresetLoadUtill.Start();
+            //PresetLoadUtill.Start();
+            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { myUIBase.Enabled=!myUIBase.Enabled; }), "PresetLoadCtr", COM3D2.PresetLoadCtr.Plugin.Properties.Resources.icon);
         }
 
 
@@ -57,22 +112,27 @@ namespace COM3D25.PresetLoadCtr.Plugin
         {
             //PresetLoadUtill.myWindowRect.save();
             PresetLoadPatch.presetType = PresetLoadPatch.PresetType.none;
-            harmony.UnpatchSelf();
+            harmony?.UnpatchSelf();
         }
 
+        internal void UiUpdate()
+        {
+            
+        }
 
-
+        /*
         public void OnGUI()
         {
             PresetLoadUtill.OnGUI(); 
         }
+        */
 
         public void Update()
         {
 
             if (ShowCounter.Value.IsUp())
             {
-                PresetLoadUtill.isGUIOn = !PresetLoadUtill.isGUIOn;                
+                myUIBase.Enabled = true;
             }
         }
 

@@ -98,10 +98,16 @@
     <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\COM3D2.GameLibs.3.9.0-r.0\lib\net35\UnityEngine.UI.dll</HintPath>
     </Reference>
+    <Reference Include="UniverseLib.Mono, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\UniverseLib.Mono.1.4.2\lib\net35\UniverseLib.Mono.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\common\PresetLoadCtr.cs">
       <Link>PresetLoadCtr.cs</Link>
+    </Compile>
+    <Compile Include="..\common\PresetLoadCtrPanel.cs">
+      <Link>PresetLoadCtrPanel.cs</Link>
     </Compile>
     <Compile Include="..\common\PresetLoadPatch.cs">
       <Link>PresetLoadPatch.cs</Link>
@@ -125,6 +131,9 @@
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Resources\icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\UniverseLib.Analyzers.1.0.4\analyzers\dotnet\cs\UniverseLib.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

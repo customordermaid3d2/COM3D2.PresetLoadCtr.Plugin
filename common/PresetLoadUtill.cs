@@ -26,24 +26,24 @@ namespace COM3D25.PresetLoadCtr.Plugin
         internal static List<string> listBody = new List<string>();
         internal static List<string> listAll = new List<string>();
         internal static List<string> lists = new List<string>();
+        //
+        //private static ConfigEntry<int> selGridMod;//= (int)ModType.AllMaid_RandomPreset;
+        //private static ConfigEntry<int> selGridList;//= (int)ListType.All;
+        //private static ConfigEntry<int> selGridPreset;// = (int)CharacterMgrPatch.PresetType.none;
+        internal static int selGridmaid = 0;
 
-        private static ConfigEntry<int> selGridMod;//= (int)ModType.AllMaid_RandomPreset;
-        private static ConfigEntry<int> selGridList;//= (int)ListType.All;
-        private static ConfigEntry<int> selGridPreset;// = (int)CharacterMgrPatch.PresetType.none;
-        private static int selGridmaid = 0;
-
-        internal static string[] namesMod;
-        internal static string[] namesList;
-        internal static string[] namesPreset;
+        //internal static string[] namesMod;
+        //internal static string[] namesList;
+        //internal static string[] namesPreset;
 
         internal static ConfigEntry<bool> isAuto;
         internal static bool isLoadList;
 
         internal static ConfigEntry<bool> Maid_SetProp_log;
 
-        public static int SelGridPreset { get => selGridPreset.Value; set => selGridPreset.Value = value; }
-        public static int SelGridList { get => selGridList.Value; set => selGridList.Value = value; }
-        public static int SelGridMod { get => selGridMod.Value; set => selGridMod.Value = value; }
+        //public static int SelGridPreset { get => selGridPreset.Value; set => selGridPreset.Value = value; }
+        //public static int SelGridList { get => selGridList.Value; set => selGridList.Value = value; }
+        //public static int SelGridMod { get => selGridMod.Value; set => selGridMod.Value = value; }
         public static bool IsAuto { get => isAuto.Value; set => isAuto.Value = value; }
 
         //public static PresetType presetType = PresetType.none;
@@ -57,17 +57,9 @@ namespace COM3D25.PresetLoadCtr.Plugin
         public static string ShortName = "SP";
 
 
-        // GUI ON OFF 설정파일로 저장
-        private static ConfigEntry<bool> IsGUIOn;
-
-        public static bool isGUIOn
-        {
-            get => IsGUIOn.Value;
-            set => IsGUIOn.Value = value;
-        }
 
         //public static MyLog myLog;
-
+       
         public enum ListType
         {
             Wear,
@@ -82,7 +74,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             AllMaid_OnePreset,
             AllMaid_RandomPreset
         }
-
+       
         public static System.Windows.Forms.OpenFileDialog openDialog;
         static bool isShowDialogLoadRun = false;
 
@@ -95,11 +87,11 @@ namespace COM3D25.PresetLoadCtr.Plugin
             {
                 if (Config == null)
                 {
-                    PresetLoadCtr.Log.LogError("Config is null");
+                    log.LogError("Config is null");
                 }
                 else
                 {
-                    PresetLoadCtr.Log.LogMessage("Config is not null");
+                    log.LogMessage("Config is not null");
                 }
                 myWindowRect = new WindowRectUtill(Config, log, "PresetLoadCtr", "PLCtr");
             }
@@ -109,18 +101,18 @@ namespace COM3D25.PresetLoadCtr.Plugin
             }
             //isOpen = isOpen;
 
-            selGridPreset = Config.Bind("ConfigFile", "selGridPreset", (int)PresetLoadPatch.PresetType.none);
-            selGridList = Config.Bind("ConfigFile", "selGridList", (int)ListType.All);
-            selGridMod = Config.Bind("ConfigFile", "selGridMod", (int)ModType.AllMaid_RandomPreset);
+            //selGridPreset = Config.Bind("ConfigFile", "selGridPreset", (int)PresetLoadPatch.PresetType.none);
+            //selGridList = Config.Bind("ConfigFile", "selGridList", (int)ListType.All);
+            //selGridMod = Config.Bind("ConfigFile", "selGridMod", (int)ModType.AllMaid_RandomPreset);
             // 일반 설정값
-            IsGUIOn = Config.Bind("GUI", "isGUIOn", false);
+            //IsGUIOn = Config.Bind("GUI", "isGUIOn", false);
             isAuto = Config.Bind("ConfigFile", "isAuto", false);
-
+            
             Maid_SetProp_log = Config.Bind("Maid", "SetProp log", true);
-
-            namesMod = Enum.GetNames(typeof(ModType));
-            namesPreset = Enum.GetNames(typeof(PresetLoadPatch.PresetType));
-            namesList = Enum.GetNames(typeof(ListType));
+            
+            //namesMod = Enum.GetNames(typeof(ModType));
+            //namesPreset = Enum.GetNames(typeof(PresetLoadPatch.PresetType));
+            //namesList = Enum.GetNames(typeof(ListType));
 
             // GameMain.Instance.SerializeStorageManager.StoreDirectoryPath 는 Awake에서 못씀
             // 파일 열기창 설정 부분. 이런건 구글링 하기
@@ -136,11 +128,6 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
         }
 
-        public static void Start()
-        {
-            SystemShortcutAPI.AddButton("PresetLoadCtr", new Action(delegate () { isGUIOn = !isGUIOn; }), "PresetLoadCtr", ExtractResource(COM3D2.PresetLoadCtr.Plugin.Properties.Resources.icon));
-        }
-
         public static byte[] ExtractResource(Bitmap image)
         {
             using (MemoryStream ms = new MemoryStream())
@@ -150,8 +137,8 @@ namespace COM3D25.PresetLoadCtr.Plugin
             }
         }
 
+        /*
         private static Vector2 scrollPosition;
-
         public static void OnGUI()
         {
             if (!isGUIOn)
@@ -227,9 +214,9 @@ namespace COM3D25.PresetLoadCtr.Plugin
             GUI.enabled = true;
             GUI.DragWindow(); // 창 드레그 가능하게 해줌. 마지막에만 넣어야함
         }
+        */
 
-
-        private static void presetLoad()
+        internal static void presetLoad(int SelGridMod)
         {
             switch ((ModType)SelGridMod)
             {
@@ -267,7 +254,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             }
         }
 
-        private static CharacterMgr.Preset presetGet()
+        internal static CharacterMgr.Preset presetGet()
         {
             CharacterMgr.Preset preset = null;
             if (isShowDialogLoadRun)
@@ -305,7 +292,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             return preset;
         }
 
-        private static void presetSave()
+        internal static void presetSave()
         {
             var maid = MaidActiveUtill.GetMaid(selGridmaid);
             if (maid == null)
@@ -333,7 +320,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
             GameMain.Instance.CharacterMgr.PresetSave(maid, presetType);
         }
 
-        private static void RandPresetRun()
+        internal static void RandPresetRun(int SelGridList, int SelGridMod)
         {
             List<string> list = lists;
             list = GetList((ListType)SelGridList, list);
