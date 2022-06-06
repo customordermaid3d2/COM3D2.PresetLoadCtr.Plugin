@@ -53,12 +53,29 @@ namespace COM3D25.PresetLoadCtr.Plugin
             }
         }
 
+        public static bool isLoading = false;
+
+        [HarmonyPatch(typeof(CharacterMgr), "PresetListLoad")]
+        [HarmonyPrefix]
+        public static void PresetListLoadPre()
+        {
+            isLoading = true;
+        }
+
+        [HarmonyPatch(typeof(CharacterMgr), "PresetListLoad")]
+        [HarmonyPostfix]
+        public static void PresetListLoadPost()
+        {
+            isLoading = false;
+        }
+
         // public Preset PresetLoad(string f_strFileName)
-        [HarmonyPatch(typeof(CharacterMgr), "PresetLoad", typeof(string))]
+        // public CharacterMgr.Preset PresetLoad(BinaryReader brRead, string f_strFileName)
+        [HarmonyPatch(typeof(CharacterMgr), "PresetLoad", typeof(BinaryReader), typeof(string))]
         [HarmonyPrefix]
         public static void PresetLoad(string f_strFileName)
         {
-            if (PresetLoadUtill.Maid_SetProp_log.Value && loaded)
+            if (PresetLoadUtill.Maid_SetProp_log.Value && loaded && !isLoading)
             {
                 PresetLoadCtr.Log.LogMessage($"PresetLoad , {f_strFileName}");
             }
@@ -68,7 +85,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
         [HarmonyPrefix]
         public static void SetProp(MaidProp mp, string filename, int f_nFileNameRID, bool f_bTemp, bool f_bNoScale = false)
         {
-            if (PresetLoadUtill.Maid_SetProp_log.Value && loaded)
+            if (PresetLoadUtill.Maid_SetProp_log.Value && loaded && !isLoading)
             {
                 PresetLoadCtr.Log.LogMessage($"SetProp , {mp.name} , {mp.strFileName} , {filename}");
             }
