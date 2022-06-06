@@ -37,6 +37,14 @@ namespace COM3D25.PresetLoadCtr.Plugin
         [HarmonyPrefix]
         public static void PresetSet( CharacterMgr.Preset f_prest)//Maid f_maid,
         {
+            if (PresetLoadUtill.Maid_SetProp_log.Value && loaded && !isLoading)
+            {
+                PresetLoadCtr.Log.LogMessage($"PresetSet , {f_prest.strFileName}");
+                foreach (var mp in f_prest.listMprop)
+                {
+                    PresetLoadCtr.Log.LogMessage($"SetProp , {mp.name} , {mp.strFileName} ");
+                }
+            }
             switch (presetType)
             {
                 case PresetType.Wear:
@@ -81,15 +89,15 @@ namespace COM3D25.PresetLoadCtr.Plugin
             }
         }
 
-        [HarmonyPatch(typeof(Maid), "SetProp", typeof(MaidProp), typeof(string), typeof(int), typeof(bool), typeof(bool))]
-        [HarmonyPrefix]
-        public static void SetProp(MaidProp mp, string filename, int f_nFileNameRID, bool f_bTemp, bool f_bNoScale = false)
-        {
-            if (PresetLoadUtill.Maid_SetProp_log.Value && loaded && !isLoading)
-            {
-                PresetLoadCtr.Log.LogMessage($"SetProp , {mp.name} , {mp.strFileName} , {filename}");
-            }
-        }
+        //[HarmonyPatch(typeof(Maid), "SetProp", typeof(MaidProp), typeof(string), typeof(int), typeof(bool), typeof(bool))]
+        //[HarmonyPrefix]
+        //public static void SetProp(MaidProp mp, string filename, int f_nFileNameRID, bool f_bTemp, bool f_bNoScale = false)
+        //{
+        //    if (PresetLoadUtill.Maid_SetProp_log.Value && loaded && !isLoading)
+        //    {
+        //        PresetLoadCtr.Log.LogMessage($"SetProp , {mp.name} , {mp.strFileName} , {filename}");
+        //    }
+        //}
 
         /// <summary>
         /// 세이브 파일 로딩 시작
