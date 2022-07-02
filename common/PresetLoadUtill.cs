@@ -185,7 +185,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
                 GUILayout.Label("All  Preset file : " + lists.Count);
 
                 GUILayout.BeginHorizontal();
-                if (GUILayout.Button("List load")) { LoadList(); }
+                if (GUILayout.Button("List load")) { LoadListStart(); }
                 if (GUILayout.Button($"Log {Maid_SetProp_log.Value}")) { Maid_SetProp_log.Value = !Maid_SetProp_log.Value;  }
                 GUILayout.EndHorizontal();
 
@@ -406,7 +406,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
             if (list.Count == 0)
             {
-                LoadList();
+                LoadListStart();
             }
 
             return list;
@@ -467,19 +467,19 @@ namespace COM3D25.PresetLoadCtr.Plugin
         }
 
 
-        internal static void LoadList()
+        internal static void LoadListStart()
+        {
+            Task.Factory.StartNew(
+                LoadList
+            );
+        }
+
+        private static void LoadList()
         {
             if (isLoadList)
             {
                 return;
             }
-            Task.Factory.StartNew(
-                LoadListStart
-            );
-        }
-
-        private static void LoadListStart()
-        {
             isLoadList = true;
 
             listWear.Clear();
@@ -491,40 +491,47 @@ namespace COM3D25.PresetLoadCtr.Plugin
             foreach (string f_strFileName in Directory.GetFiles(Path.Combine(Environment.CurrentDirectory, "Preset"), "*.preset", SearchOption.AllDirectories))
             {
                 //jUnityEngine.Debug.Log("RandPreset load : " + f_strFileName);
-
-                FileStream fileStream = new FileStream(f_strFileName, FileMode.Open);
-                if (fileStream == null)
+                try
                 {
-                    continue;
-                }
-                byte[] buffer = new byte[fileStream.Length];
-                fileStream.Read(buffer, 0, (int)fileStream.Length);
-                fileStream.Close();
-                fileStream.Dispose();
-                BinaryReader binaryReader = new BinaryReader(new MemoryStream(buffer));
+                    FileStream fileStream = new FileStream(f_strFileName, FileMode.Open);
+                    if (fileStream == null)
+                    {
+                        continue;
+                    }
+                    byte[] buffer = new byte[fileStream.Length];
+                    fileStream.Read(buffer, 0, (int)fileStream.Length);
+                    fileStream.Close();
+                    fileStream.Dispose();
+                    BinaryReader binaryReader = new BinaryReader(new MemoryStream(buffer));
 
-                string a = binaryReader.ReadString();
-                if (a != "CM3D2_PRESET")
-                {
+                    string a = binaryReader.ReadString();
+                    if (a != "CM3D2_PRESET")
+                    {
+                        binaryReader.Close();
+                        continue;
+                    }
+                    binaryReader.ReadInt32();
+                    switch ((CharacterMgr.PresetType)binaryReader.ReadInt32())
+                    {
+                        case CharacterMgr.PresetType.Wear:
+                            listWear.Add(f_strFileName);
+                            break;
+                        case CharacterMgr.PresetType.Body:
+                            listBody.Add(f_strFileName);
+                            break;
+                        case CharacterMgr.PresetType.All:
+                            listAll.Add(f_strFileName);
+                            break;
+                        default:
+                            break;
+                    }
                     binaryReader.Close();
-                    continue;
+
                 }
-                binaryReader.ReadInt32();
-                switch ((CharacterMgr.PresetType)binaryReader.ReadInt32())
+                catch (Exception e)
                 {
-                    case CharacterMgr.PresetType.Wear:
-                        listWear.Add(f_strFileName);
-                        break;
-                    case CharacterMgr.PresetType.Body:
-                        listBody.Add(f_strFileName);
-                        break;
-                    case CharacterMgr.PresetType.All:
-                        listAll.Add(f_strFileName);
-                        break;
-                    default:
-                        break;
+                    PresetLoadCtr.Log.LogWarning($" {e.ToString()}");
                 }
-                binaryReader.Close();
             }
 
             lists.AddRange(listWear);

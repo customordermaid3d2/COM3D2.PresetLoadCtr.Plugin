@@ -35,7 +35,7 @@ namespace COM3D25.PresetLoadCtr.Plugin
 
 
             PresetLoadUtill.init(Config, Log);
-            PresetLoadUtill.LoadList();
+            PresetLoadUtill.LoadListStart();
         }
 
 
